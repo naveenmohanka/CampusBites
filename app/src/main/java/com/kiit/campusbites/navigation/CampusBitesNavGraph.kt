@@ -1,27 +1,31 @@
 package com.kiit.campusbites.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import com.kiit.campusbites.ui.artwork.ArtworkScreen
 import com.kiit.campusbites.ui.auth.LoginScreen
-import com.kiit.campusbites.ui.home.HomeScreen
 
 @Composable
-fun CampusBitesNavGraph() {
-
-    val navController = rememberNavController()
+fun CampusBitesNavGraph(
+    navController: NavHostController
+) {
 
     NavHost(
         navController = navController,
-        startDestination = Routes.LOGIN
+        startDestination = "artwork"
     ) {
 
-        composable(Routes.LOGIN) {
-            LoginScreen(
-                onLoginSuccess = {
-                    navController.navigate(Routes.HOME) {
-                        popUpTo(Routes.LOGIN) {
+        // Artwork Screen
+        composable("artwork") {
+
+            ArtworkScreen(
+                onNextClick = {
+
+                    navController.navigate("login") {
+
+                        popUpTo("artwork") {
                             inclusive = true
                         }
                     }
@@ -29,9 +33,14 @@ fun CampusBitesNavGraph() {
             )
         }
 
-        composable(Routes.HOME) {
-            HomeScreen()
-        }
+        // Login Screen
+        composable("login") {
 
+            LoginScreen(
+                onLoginSuccess = {
+                    // Later → HomeScreen
+                }
+            )
+        }
     }
 }
