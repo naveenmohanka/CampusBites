@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.kiit.campusbites.ui.artwork.ArtworkScreen
 import com.kiit.campusbites.ui.auth.LoginScreen
+import com.kiit.campusbites.ui.auth.SignupScreen
 
 @Composable
 fun CampusBitesNavGraph(
@@ -39,6 +40,27 @@ fun CampusBitesNavGraph(
             LoginScreen(
                 onLoginSuccess = {
                     // Later → HomeScreen
+                },
+                onSignupClick = {
+
+                    navController.navigate("signup")
+                }
+            )
+        }
+
+        // Signup Screen
+        composable("signup") {
+
+            SignupScreen(
+                onSignupSuccess = {
+                    navController.navigate("login") {
+                        popUpTo("signup") {
+                            inclusive = true
+                        }
+                    }
+                },
+                onLoginClick = {
+                    navController.popBackStack()
                 }
             )
         }
