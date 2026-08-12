@@ -43,7 +43,6 @@ dependencies {
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.navigation.compose)
     implementation("androidx.core:core-splashscreen:1.2.0")
-    implementation("androidx.compose.material:material-icons-extended:<your-version>")
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.core.ktx)

@@ -1,6 +1,5 @@
 package com.kiit.campusbites.ui.auth
 
-import android.R.attr.fontWeight
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -12,17 +11,23 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -46,300 +51,291 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kiit.campusbites.R
+import com.kiit.campusbites.ui.theme.CampusCream
+import com.kiit.campusbites.ui.theme.CampusPink
+import com.kiit.campusbites.ui.theme.CampusPurple
+import com.kiit.campusbites.ui.theme.CampusPurpleDark
+import com.kiit.campusbites.ui.theme.CampusPurpleDeep
+import com.kiit.campusbites.ui.theme.CampusYellow
 
 @Composable
 fun LoginScreen(
     onLoginSuccess: () -> Unit,
     onSignupClick: () -> Unit
 ) {
-
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     var emailError by remember { mutableStateOf("") }
     var passwordError by remember { mutableStateOf("") }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(
                 Brush.verticalGradient(
                     colors = listOf(
-                        Color(0xFFFFB91D),
-                        Color(0xFFFFC928),
-                        Color(0xFF6A22D9),
-                        Color(0xFF24105F)
+                        CampusYellow,
+                        Color(0xFFFFC93B),
+                        CampusPurple,
+                        CampusPurpleDeep
                     )
                 )
             )
     ) {
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 22.dp),
+                .verticalScroll(rememberScrollState())
+                .navigationBarsPadding()
+                .padding(horizontal = 22.dp, vertical = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Spacer(modifier = Modifier.height(12.dp))
 
-            Spacer(modifier = Modifier.height(35.dp))
-
-            // CampusBites Logo
-            Image(
-                painter = painterResource(R.drawable.campusbites_logo1),
-                contentDescription = null,
+            Box(
                 modifier = Modifier
-                    .size(120.dp),
-                contentScale = ContentScale.Fit
-            )
+                    .size(124.dp)
+                    .clip(CircleShape)
+                    .background(Color.White.copy(alpha = 0.18f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.campusbites_logo1),
+                    contentDescription = "CampusBites logo",
+                    modifier = Modifier.size(108.dp),
+                    contentScale = ContentScale.Fit
+                )
+            }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Text(
                 text = "CampusBites",
                 fontSize = 34.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF32117A)
+                color = CampusPurpleDeep
             )
 
             Text(
-                text = "Hungry? We Got You🍔",
+                text = "Hungry? We got you.",
                 fontSize = 15.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = Color.Red
+                color = Color.White
             )
 
-            Spacer(modifier = Modifier.height(28.dp))
+            Spacer(modifier = Modifier.height(26.dp))
 
-            // Login Card
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(32.dp))
-                    .background(
-                        color = Color(0xFFFFF8E7)
-                    )
-                    .padding(
-                        horizontal = 22.dp,
-                        vertical = 26.dp
-                    ),
-                horizontalAlignment = Alignment.CenterHorizontally
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(32.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = CampusCream
+                ),
+                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
             ) {
-
-                Text(
-                    text = "Welcome Back! 👋",
-                    fontSize = 27.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF24105F)
-                )
-
-                Spacer(modifier = Modifier.height(25.dp))
-
-                // Email label
-                Text(
-                    text = "Email / College ID",
-                    modifier = Modifier.fillMaxWidth(),
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF32117A)
-                )
-
-                Spacer(modifier = Modifier.height(7.dp))
-
-                OutlinedTextField(
-                    value = email,
-                    onValueChange = {
-                        email = it
-                        emailError = ""
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true,
-                    placeholder = {
-                        Text(
-                            text = "Enter your email or college ID",
-                            color = Color.Gray
-                        )
-                    },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.Email,
-                            contentDescription = "Email",
-                            tint = Color(0xFF6A22D9)
-                        )
-                    },
-                    shape = RoundedCornerShape(18.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color(0xFF7B2BE2),
-                        unfocusedBorderColor = Color(0xFFCA9AFF),
-                        focusedContainerColor = Color.White,
-                        unfocusedContainerColor = Color.White
-                    )
-                )
-
-                if (emailError.isNotEmpty()) {
-                    Text(
-                        text = emailError,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 4.dp),
-                        color = Color.Red,
-                        fontSize = 12.sp
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                // Password label
-                Text(
-                    text = "Password",
-                    modifier = Modifier.fillMaxWidth(),
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF32117A)
-                )
-
-                Spacer(modifier = Modifier.height(7.dp))
-
-                OutlinedTextField(
-                    value = password,
-                    onValueChange = {
-                        password = it
-                        passwordError = ""
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true,
-                    placeholder = {
-                        Text(
-                            text = "Enter your password",
-                            color = Color.Gray
-                        )
-                    },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.Lock,
-                            contentDescription = "Password",
-                            tint = Color(0xFF6A22D9)
-                        )
-                    },
-                    trailingIcon = {
-                        IconButton(
-                            onClick = {
-                                passwordVisible = !passwordVisible
-                            }
-                        ) {
-                            Icon(
-                                imageVector = if (passwordVisible)
-                                    Icons.Default.Visibility
-                                else
-                                    Icons.Default.VisibilityOff,
-                                contentDescription = "Show password",
-                                tint = Color(0xFF6A22D9)
-                            )
-                        }
-                    },
-                    visualTransformation = if (passwordVisible)
-                        VisualTransformation.None
-                    else
-                        PasswordVisualTransformation(),
-                    shape = RoundedCornerShape(18.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color(0xFF7B2BE2),
-                        unfocusedBorderColor = Color(0xFFCA9AFF),
-                        focusedContainerColor = Color.White,
-                        unfocusedContainerColor = Color.White
-                    )
-                )
-                if (passwordError.isNotEmpty()) {
-                    Text(
-                        text = passwordError,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 4.dp),
-                        color = Color.Red,
-                        fontSize = 12.sp
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Forgot Password
-                Text(
-                    text = "Forgot Password?",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(end = 4.dp),
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF6A22D9)
-                )
-
-                Spacer(modifier = Modifier.height(22.dp))
-
-                // Login Button
-                Button(
-                    onClick = {
-
-                        emailError = ""
-                        passwordError = ""
-
-                        var isValid = true
-
-                        if (email.isBlank()) {
-                            emailError = "Please enter your email or college ID"
-                            isValid = false
-                        }
-
-                        if (password.isBlank()) {
-                            passwordError = "Please enter your password"
-                            isValid = false
-                        }
-
-                        if (isValid) {
-                            onLoginSuccess()
-                        }
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(58.dp),
-                    shape = RoundedCornerShape(30.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF6A22D9),
-                        contentColor = Color.White
-                    )
+                Column(
+                    modifier = Modifier.padding(horizontal = 22.dp, vertical = 26.dp),
+                    verticalArrangement = Arrangement.spacedBy(14.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Login   →",
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold
+                        text = "Welcome Back",
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = CampusPurpleDeep
                     )
-                }
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                // Signup prompt
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
 
                     Text(
-                        text = "Don't have an account?",
+                        text = "Login to continue ordering from your campus favourites.",
                         fontSize = 14.sp,
-                        color = Color(0xFF24105F)
+                        color = CampusPurpleDark.copy(alpha = 0.7f)
                     )
 
-                    Spacer(modifier = Modifier.width(6.dp))
+                    FormLabel("Email / College ID")
+
+                    OutlinedTextField(
+                        value = email,
+                        onValueChange = {
+                            email = it
+                            emailError = ""
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        singleLine = true,
+                        placeholder = {
+                            Text(
+                                text = "Enter your email or college ID",
+                                color = Color.Gray
+                            )
+                        },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Email,
+                                contentDescription = "Email",
+                                tint = CampusPurple
+                            )
+                        },
+                        shape = RoundedCornerShape(18.dp),
+                        colors = fieldColors()
+                    )
+
+                    if (emailError.isNotEmpty()) {
+                        ErrorText(emailError)
+                    }
+
+                    FormLabel("Password")
+
+                    OutlinedTextField(
+                        value = password,
+                        onValueChange = {
+                            password = it
+                            passwordError = ""
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        singleLine = true,
+                        placeholder = {
+                            Text(
+                                text = "Enter your password",
+                                color = Color.Gray
+                            )
+                        },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Lock,
+                                contentDescription = "Password",
+                                tint = CampusPurple
+                            )
+                        },
+                        trailingIcon = {
+                            IconButton(
+                                onClick = {
+                                    passwordVisible = !passwordVisible
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = if (passwordVisible) {
+                                        Icons.Default.Visibility
+                                    } else {
+                                        Icons.Default.VisibilityOff
+                                    },
+                                    contentDescription = "Toggle password",
+                                    tint = CampusPurple
+                                )
+                            }
+                        },
+                        visualTransformation = if (passwordVisible) {
+                            VisualTransformation.None
+                        } else {
+                            PasswordVisualTransformation()
+                        },
+                        shape = RoundedCornerShape(18.dp),
+                        colors = fieldColors()
+                    )
+
+                    if (passwordError.isNotEmpty()) {
+                        ErrorText(passwordError)
+                    }
 
                     Text(
-                        text = "Sign Up",
-                        modifier = Modifier.clickable
-                        {
-                            onSignupClick()
-                        },
-                        fontSize = 16.sp,
+                        text = "Forgot Password?",
+                        modifier = Modifier.fillMaxWidth(),
+                        fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFFD52EBB)
+                        color = CampusPurple
                     )
+
+                    Button(
+                        onClick = {
+                            emailError = ""
+                            passwordError = ""
+
+                            var isValid = true
+
+                            if (email.isBlank()) {
+                                emailError = "Please enter your email or college ID"
+                                isValid = false
+                            }
+
+                            if (password.isBlank()) {
+                                passwordError = "Please enter your password"
+                                isValid = false
+                            }
+
+                            if (isValid) {
+                                onLoginSuccess()
+                            }
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(58.dp),
+                        shape = CircleShape,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = CampusPurple,
+                            contentColor = Color.White
+                        )
+                    ) {
+                        Text(
+                            text = "Login ->",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = "Don't have an account?",
+                            fontSize = 14.sp,
+                            color = CampusPurpleDark
+                        )
+
+                        Spacer(modifier = Modifier.width(6.dp))
+
+                        Text(
+                            text = "Sign Up",
+                            modifier = Modifier.clickable {
+                                onSignupClick()
+                            },
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = CampusPink
+                        )
+                    }
                 }
             }
         }
     }
 }
+
+@Composable
+private fun FormLabel(text: String) {
+    Text(
+        text = text,
+        modifier = Modifier.fillMaxWidth(),
+        fontSize = 15.sp,
+        fontWeight = FontWeight.Bold,
+        color = CampusPurpleDeep
+    )
+}
+
+@Composable
+private fun ErrorText(message: String) {
+    Text(
+        text = message,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 2.dp),
+        color = Color(0xFFD83A52),
+        fontSize = 12.sp
+    )
+}
+
+@Composable
+private fun fieldColors() = OutlinedTextFieldDefaults.colors(
+    focusedBorderColor = CampusPurple,
+    unfocusedBorderColor = Color(0xFFD7BDFB),
+    focusedContainerColor = Color.White,
+    unfocusedContainerColor = Color.White
+)

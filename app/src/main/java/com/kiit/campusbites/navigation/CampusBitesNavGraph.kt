@@ -6,10 +6,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.kiit.campusbites.ui.artwork.ArtworkScreen
 import com.kiit.campusbites.ui.auth.LoginScreen
-import com.kiit.campusbites.ui.profile.ProfileScreen
 import com.kiit.campusbites.ui.auth.SignupScreen
 import com.kiit.campusbites.ui.home.FoodCourtsScreen
 import com.kiit.campusbites.ui.home.HomeScreen
+import com.kiit.campusbites.ui.profile.ProfileScreen
 
 @Composable
 fun CampusBitesNavGraph(
@@ -18,18 +18,14 @@ fun CampusBitesNavGraph(
 
     NavHost(
         navController = navController,
-        startDestination = "artwork"
+        startDestination = Routes.ARTWORK
     ) {
 
-        // Artwork Screen
-        composable("artwork") {
-
+        composable(Routes.ARTWORK) {
             ArtworkScreen(
                 onNextClick = {
-
-                    navController.navigate("login") {
-
-                        popUpTo("artwork") {
+                    navController.navigate(Routes.LOGIN) {
+                        popUpTo(Routes.ARTWORK) {
                             inclusive = true
                         }
                     }
@@ -37,32 +33,26 @@ fun CampusBitesNavGraph(
             )
         }
 
-        // Login Screen
-        composable("login") {
-
+        composable(Routes.LOGIN) {
             LoginScreen(
                 onLoginSuccess = {
-                    navController.navigate("home") {
-                        popUpTo("login") {
+                    navController.navigate(Routes.HOME) {
+                        popUpTo(Routes.LOGIN) {
                             inclusive = true
                         }
                     }
                 },
                 onSignupClick = {
-                    navController.navigate("signup")
+                    navController.navigate(Routes.SIGNUP)
                 }
             )
         }
 
-
-        // Signup Screen
-
-        composable("signup") {
-
+        composable(Routes.SIGNUP) {
             SignupScreen(
                 onSignupSuccess = {
-                    navController.navigate("login") {
-                        popUpTo("signup") {
+                    navController.navigate(Routes.LOGIN) {
+                        popUpTo(Routes.SIGNUP) {
                             inclusive = true
                         }
                     }
@@ -73,23 +63,27 @@ fun CampusBitesNavGraph(
             )
         }
 
-// Home Screen
-        composable("home") {
-
+        composable(Routes.HOME) {
             HomeScreen(
                 onFoodCourtsSeeAll = {
-                    navController.navigate("foodCourts")
+                    navController.navigate(Routes.FOOD_COURTS)
                 },
-
                 onProfileClick = {
-                    navController.navigate("profile")
+                    navController.navigate(Routes.PROFILE)
                 }
             )
         }
 
-        composable("foodCourts") {
-
+        composable(Routes.FOOD_COURTS) {
             FoodCourtsScreen(
+                onBackClick = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(Routes.PROFILE) {
+            ProfileScreen(
                 onBackClick = {
                     navController.popBackStack()
                 }
@@ -97,3 +91,5 @@ fun CampusBitesNavGraph(
         }
     }
 }
+
+

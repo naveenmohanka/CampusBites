@@ -8,12 +8,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -23,7 +23,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -35,130 +34,75 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
-
-private val CampusPurple = Color(0xFF5B21B6)
-private val DarkPurple = Color(0xFF4F1D95)
-private val BackgroundCream = Color(0xFFFFFCF5)
-private val SoftPurple = Color(0xFFF4F0FF)
-private val DarkText = Color(0xFF29105F)
-private val GrayText = Color(0xFF77727F)
-
-
-// ------------------------------------------------------------
-// FOOD COURT DATA
-// ------------------------------------------------------------
+import com.kiit.campusbites.ui.theme.CampusCream
+import com.kiit.campusbites.ui.theme.CampusDanger
+import com.kiit.campusbites.ui.theme.CampusLavender
+import com.kiit.campusbites.ui.theme.CampusPurple
+import com.kiit.campusbites.ui.theme.CampusSuccess
+import com.kiit.campusbites.ui.theme.CampusText
+import com.kiit.campusbites.ui.theme.CampusTextMuted
+import com.kiit.campusbites.ui.theme.CampusYellowSoft
 
 private val foodCourts = listOf(
-    FoodCourt(
-        name = "Food Court 1",
-        imageEmoji = "🍔",
-        isOpen = true,
-        estimatedWait = "~15 min"
-    ),
-    FoodCourt(
-        name = "Food Court 2",
-        imageEmoji = "🍕",
-        isOpen = true,
-        estimatedWait = "~10 min"
-    ),
-    FoodCourt(
-        name = "Food Court 3",
-        imageEmoji = "🥤",
-        isOpen = true,
-        estimatedWait = "~20 min"
-    ),
-    FoodCourt(
-        name = "Food Court 4",
-        imageEmoji = "🍜",
-        isOpen = false,
-        estimatedWait = ""
-    ),
-    FoodCourt(
-        name = "Food Court 5",
-        imageEmoji = "🌯",
-        isOpen = true,
-        estimatedWait = "~12 min"
-    )
+    FoodCourt("Central Bites", "BURGERS", true, "12 min", "Always packed"),
+    FoodCourt("Pizza Point", "PIZZA", true, "10 min", "Cheese specials"),
+    FoodCourt("Chill Cups", "DRINKS", true, "8 min", "Cold coffees"),
+    FoodCourt("Spice Lane", "ROLLS", false, "", "Opens at 5 PM"),
+    FoodCourt("Snack Stop", "SNACKS", true, "15 min", "Evening rush")
 )
-
-
-// ------------------------------------------------------------
-// FOOD COURTS SCREEN
-// ------------------------------------------------------------
 
 @Composable
 fun FoodCourtsScreen(
     onBackClick: () -> Unit = {},
     onFoodCourtClick: (FoodCourt) -> Unit = {}
 ) {
-
     Scaffold(
-        containerColor = BackgroundCream,
-
+        containerColor = CampusCream,
         topBar = {
-
             Surface(
                 modifier = Modifier
                     .fillMaxWidth()
                     .statusBarsPadding(),
-
-                color = BackgroundCream
-            )  {
-
+                color = CampusCream
+            ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(
-                            horizontal = 12.dp,
-                            vertical = 10.dp
-                        ),
-
+                        .padding(horizontal = 12.dp, vertical = 10.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-
-                    IconButton(
-                        onClick = onBackClick
-                    ) {
-
+                    IconButton(onClick = onBackClick) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
                             contentDescription = "Back",
-                            tint = DarkText
+                            tint = CampusText
                         )
                     }
 
-                    Spacer(
-                        modifier = Modifier.width(4.dp)
-                    )
+                    Spacer(modifier = Modifier.width(4.dp))
 
-                    Column(
-                        modifier = Modifier.weight(1f)
-                    ) {
-
+                    Column(modifier = Modifier.weight(1f)) {
                         Text(
                             text = "Food Courts",
-                            color = DarkText,
-                            fontSize = 22.sp,
-                            fontWeight = FontWeight.Bold
+                            color = CampusText,
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.ExtraBold
                         )
 
                         Text(
                             text = "Explore food around your campus",
-                            color = GrayText,
+                            color = CampusTextMuted,
                             fontSize = 12.sp
                         )
                     }
 
-                    IconButton(
-                        onClick = {}
-                    ) {
-
+                    IconButton(onClick = {}) {
                         Icon(
                             imageVector = Icons.Default.Search,
                             contentDescription = "Search",
@@ -168,214 +112,174 @@ fun FoodCourtsScreen(
                 }
             }
         }
-
     ) { innerPadding ->
-
         LazyColumn(
-
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
-
-            contentPadding = PaddingValues(
-                horizontal = 20.dp,
-                vertical = 18.dp
-            ),
-
+            contentPadding = PaddingValues(horizontal = 20.dp, vertical = 18.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-
             item {
+                Card(
+                    shape = RoundedCornerShape(24.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(18.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(48.dp)
+                                .clip(CircleShape)
+                                .background(CampusLavender),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "${foodCourts.size}",
+                                color = CampusPurple,
+                                fontWeight = FontWeight.ExtraBold
+                            )
+                        }
 
-                Text(
-                    text = "${foodCourts.size} food courts available",
-                    color = GrayText,
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Medium
-                )
+                        Spacer(modifier = Modifier.width(14.dp))
+
+                        Column {
+                            Text(
+                                text = "Active food courts",
+                                color = CampusText,
+                                fontSize = 17.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Text(
+                                text = "Browse menus, check wait times and find the fastest pickup spot.",
+                                color = CampusTextMuted,
+                                fontSize = 12.sp
+                            )
+                        }
+                    }
+                }
             }
 
             items(foodCourts) { foodCourt ->
-
                 FoodCourtListCard(
                     foodCourt = foodCourt,
-                    onClick = {
-                        onFoodCourtClick(foodCourt)
-                    }
+                    onClick = { onFoodCourtClick(foodCourt) }
                 )
             }
         }
     }
 }
 
-
-// ------------------------------------------------------------
-// FOOD COURT LIST CARD
-// ------------------------------------------------------------
-
 @Composable
 private fun FoodCourtListCard(
     foodCourt: FoodCourt,
     onClick: () -> Unit
 ) {
-
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable {
-                onClick()
-            },
-
-        shape = RoundedCornerShape(22.dp),
-
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White
-        ),
-
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 2.dp
-        )
+            .clickable { onClick() },
+        shape = RoundedCornerShape(24.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
     ) {
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
-
+                .padding(14.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-
-            // ------------------------------------------------
-            // IMAGE
-            // ------------------------------------------------
-
             Box(
                 modifier = Modifier
-                    .size(105.dp)
-                    .clip(
-                        RoundedCornerShape(18.dp)
+                    .size(112.dp)
+                    .clip(RoundedCornerShape(20.dp))
+                    .background(
+                        Brush.linearGradient(
+                            colors = listOf(CampusYellowSoft, Color(0xFFFFF6DA))
+                        )
                     )
-                    .background(SoftPurple),
-
-                contentAlignment = Alignment.Center
+                    .padding(14.dp)
             ) {
+                Text(
+                    text = foodCourt.imageLabel,
+                    color = CampusPurple,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.ExtraBold
+                )
 
                 Text(
-                    text = foodCourt.imageEmoji,
-                    fontSize = 45.sp
+                    text = foodCourt.highlight,
+                    color = CampusText,
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.align(Alignment.BottomStart)
                 )
             }
 
+            Spacer(modifier = Modifier.width(14.dp))
 
-            Spacer(
-                modifier = Modifier.width(14.dp)
-            )
-
-
-            // ------------------------------------------------
-            // INFORMATION
-            // ------------------------------------------------
-
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
-
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = foodCourt.name,
-                    color = DarkText,
-                    fontSize = 17.sp,
-                    fontWeight = FontWeight.Bold,
+                    color = CampusText,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.ExtraBold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
 
-                Spacer(
-                    modifier = Modifier.height(7.dp)
-                )
+                Spacer(modifier = Modifier.height(8.dp))
 
-
-                // OPEN / CLOSED
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Box(
                         modifier = Modifier
                             .size(8.dp)
                             .clip(CircleShape)
-                            .background(
-                                if (foodCourt.isOpen)
-                                    Color(0xFF22C55E)
-                                else
-                                    Color(0xFFEF4444)
-                            )
+                            .background(if (foodCourt.isOpen) CampusSuccess else CampusDanger)
                     )
 
-                    Spacer(
-                        modifier = Modifier.width(6.dp)
-                    )
+                    Spacer(modifier = Modifier.width(6.dp))
 
                     Text(
-                        text = if (foodCourt.isOpen)
-                            "Open"
-                        else
-                            "Closed",
-
-                        color = if (foodCourt.isOpen)
-                            Color(0xFF16A34A)
-                        else
-                            Color(0xFFDC2626),
-
+                        text = if (foodCourt.isOpen) "Open now" else "Closed",
+                        color = if (foodCourt.isOpen) CampusSuccess else CampusDanger,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold
                     )
                 }
 
+                Spacer(modifier = Modifier.height(7.dp))
 
-                // WAIT TIME
-
-                if (foodCourt.isOpen) {
-
-                    Spacer(
-                        modifier = Modifier.height(6.dp)
-                    )
-
-                    Text(
-                        text = "Estimated wait ${foodCourt.estimatedWait}",
-                        color = GrayText,
-                        fontSize = 12.sp
-                    )
-                }
-
-
-                Spacer(
-                    modifier = Modifier.height(8.dp)
+                Text(
+                    text = if (foodCourt.isOpen) {
+                        "Estimated wait ${foodCourt.estimatedWait}"
+                    } else {
+                        foodCourt.highlight
+                    },
+                    color = CampusTextMuted,
+                    fontSize = 12.sp
                 )
 
+                Spacer(modifier = Modifier.height(10.dp))
 
                 Text(
                     text = "View menu",
                     color = CampusPurple,
                     fontSize = 12.sp,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.Bold
                 )
             }
 
-
-            // ------------------------------------------------
-            // ARROW
-            // ------------------------------------------------
-
             Box(
                 modifier = Modifier
-                    .size(34.dp)
+                    .size(36.dp)
                     .clip(CircleShape)
-                    .background(SoftPurple),
-
+                    .background(CampusLavender),
                 contentAlignment = Alignment.Center
             ) {
-
                 Icon(
                     imageVector = Icons.Default.ChevronRight,
                     contentDescription = "Open",

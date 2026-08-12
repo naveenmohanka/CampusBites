@@ -37,30 +37,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
-
-// ---------------------------------------------------------
-// CAMPUSBITES COLORS
-// ---------------------------------------------------------
-
-private val CampusYellow = Color(0xFFFFB91D)
-private val CampusPurple = Color(0xFF5B21B6)
-private val DarkPurple = Color(0xFF4F1D95)
-private val CampusPink = Color(0xFFE83EBC)
-
-private val BackgroundCream = Color(0xFFFFFCF5)
-private val SoftPurple = Color(0xFFF4F0FF)
-private val DarkText = Color(0xFF29105F)
-private val GrayText = Color(0xFF77727F)
-
-
-// ---------------------------------------------------------
-// PROFILE SCREEN
-// ---------------------------------------------------------
+import com.kiit.campusbites.ui.theme.CampusCream
+import com.kiit.campusbites.ui.theme.CampusLavender
+import com.kiit.campusbites.ui.theme.CampusPink
+import com.kiit.campusbites.ui.theme.CampusPurple
+import com.kiit.campusbites.ui.theme.CampusPurpleDark
+import com.kiit.campusbites.ui.theme.CampusText
+import com.kiit.campusbites.ui.theme.CampusTextMuted
+import com.kiit.campusbites.ui.theme.CampusYellow
 
 @Composable
 fun ProfileScreen(
@@ -72,58 +61,30 @@ fun ProfileScreen(
     onRewardsClick: () -> Unit = {},
     onLogoutClick: () -> Unit = {}
 ) {
-
     Scaffold(
-        containerColor = BackgroundCream,
-
+        containerColor = CampusCream,
         topBar = {
-
-            ProfileTopBar(
-                onBackClick = onBackClick
-            )
+            ProfileTopBar(onBackClick = onBackClick)
         }
-
     ) { innerPadding ->
-
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
-
-            contentPadding = PaddingValues(
-                horizontal = 20.dp,
-                vertical = 20.dp
-            ),
-
+            contentPadding = PaddingValues(horizontal = 20.dp, vertical = 20.dp),
             verticalArrangement = Arrangement.spacedBy(18.dp)
         ) {
-
-            // ------------------------------------------------
-            // PROFILE HEADER
-            // ------------------------------------------------
-
             item {
-
-                ProfileHeader(
-                    onEditClick = onEditProfileClick
-                )
+                ProfileHeader(onEditClick = onEditProfileClick)
             }
 
+            item { SectionTitle("Quick access") }
 
-            // ------------------------------------------------
-            // MY ACCOUNT
-            // ------------------------------------------------
+            item { StatsRow() }
 
-            item {
-
-                SectionTitle(
-                    title = "My Account"
-                )
-            }
-
+            item { SectionTitle("My Account") }
 
             item {
-
                 AccountCard(
                     onOrdersClick = onOrdersClick,
                     onFavoritesClick = onFavoritesClick,
@@ -131,223 +92,205 @@ fun ProfileScreen(
                 )
             }
 
-
-            // ------------------------------------------------
-            // REWARDS
-            // ------------------------------------------------
+            item { SectionTitle("Rewards") }
 
             item {
-
-                SectionTitle(
-                    title = "Rewards"
-                )
+                RewardsCard(onClick = onRewardsClick)
             }
 
-
             item {
-
-                RewardsCard(
-                    onClick = onRewardsClick
-                )
-            }
-
-
-            // ------------------------------------------------
-            // LOGOUT
-            // ------------------------------------------------
-
-            item {
-
-                LogoutButton(
-                    onClick = onLogoutClick
-                )
+                LogoutButton(onClick = onLogoutClick)
             }
         }
     }
 }
-
-
-// ---------------------------------------------------------
-// TOP BAR
-// ---------------------------------------------------------
 
 @Composable
 private fun ProfileTopBar(
     onBackClick: () -> Unit
 ) {
-
     Surface(
-        modifier = Modifier
-            .fillMaxWidth(),
-
-        color = BackgroundCream
+        modifier = Modifier.fillMaxWidth(),
+        color = CampusCream
     ) {
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(
-                    horizontal = 12.dp,
-                    vertical = 10.dp
-                ),
-
+                .padding(horizontal = 12.dp, vertical = 10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-
-            IconButton(
-                onClick = onBackClick
-            ) {
-
+            IconButton(onClick = onBackClick) {
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
                     contentDescription = "Back",
-                    tint = DarkText
+                    tint = CampusText
                 )
             }
 
-
-            Spacer(
-                modifier = Modifier.width(4.dp)
-            )
-
+            Spacer(modifier = Modifier.width(4.dp))
 
             Text(
                 text = "Profile",
-                color = DarkText,
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Bold
+                color = CampusText,
+                fontSize = 24.sp,
+                fontWeight = FontWeight.ExtraBold
             )
         }
     }
 }
-
-
-// ---------------------------------------------------------
-// PROFILE HEADER
-// ---------------------------------------------------------
 
 @Composable
 private fun ProfileHeader(
     onEditClick: () -> Unit
 ) {
-
     Card(
         modifier = Modifier.fillMaxWidth(),
-
-        shape = RoundedCornerShape(24.dp),
-
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White
-        ),
-
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 2.dp
-        )
+        shape = RoundedCornerShape(28.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
     ) {
-
-        Row(
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(18.dp),
-
-            verticalAlignment = Alignment.CenterVertically
+                .background(
+                    Brush.linearGradient(
+                        colors = listOf(CampusPurpleDark, CampusPurple, CampusPink)
+                    )
+                )
+                .padding(20.dp)
         ) {
-
-            // Avatar
-
-            Box(
-                modifier = Modifier
-                    .size(72.dp)
-                    .clip(CircleShape)
-                    .background(SoftPurple),
-
-                contentAlignment = Alignment.Center
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
             ) {
+                Box(
+                    modifier = Modifier
+                        .size(80.dp)
+                        .clip(CircleShape)
+                        .background(Color.White.copy(alpha = 0.18f)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "N",
+                        color = Color.White,
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                }
 
-                Text(
-                    text = "N",
-                    color = CampusPurple,
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
+                Spacer(modifier = Modifier.width(16.dp))
 
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = "Naveen",
+                        color = Color.White,
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.ExtraBold
+                    )
 
-            Spacer(
-                modifier = Modifier.width(14.dp)
-            )
+                    Spacer(modifier = Modifier.height(4.dp))
 
+                    Text(
+                        text = "naveen@student.kiit.ac.in",
+                        color = Color.White.copy(alpha = 0.82f),
+                        fontSize = 13.sp
+                    )
 
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
+                    Spacer(modifier = Modifier.height(10.dp))
 
-                Text(
-                    text = "Naveen",
-                    color = DarkText,
-                    fontSize = 19.sp,
-                    fontWeight = FontWeight.Bold
-                )
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(Color.White.copy(alpha = 0.18f))
+                            .padding(horizontal = 10.dp, vertical = 6.dp)
+                    ) {
+                        Text(
+                            text = "Student Member",
+                            color = CampusYellow,
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
 
-                Spacer(
-                    modifier = Modifier.height(3.dp)
-                )
-
-                Text(
-                    text = "naveen@student.kiit.ac.in",
-                    color = GrayText,
-                    fontSize = 12.sp
-                )
-
-                Spacer(
-                    modifier = Modifier.height(7.dp)
-                )
-
-                Text(
-                    text = "Student",
-                    color = CampusPurple,
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-            }
-
-
-            IconButton(
-                onClick = onEditClick
-            ) {
-
-                Icon(
-                    imageVector = Icons.Default.Edit,
-                    contentDescription = "Edit Profile",
-                    tint = CampusPurple
-                )
+                IconButton(onClick = onEditClick) {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = "Edit profile",
+                        tint = Color.White
+                    )
+                }
             }
         }
     }
 }
 
+@Composable
+private fun StatsRow() {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        ProfileStatCard(
+            modifier = Modifier.weight(1f),
+            title = "12",
+            subtitle = "Orders"
+        )
+        ProfileStatCard(
+            modifier = Modifier.weight(1f),
+            title = "4",
+            subtitle = "Favorites"
+        )
+        ProfileStatCard(
+            modifier = Modifier.weight(1f),
+            title = "120",
+            subtitle = "Points"
+        )
+    }
+}
 
-// ---------------------------------------------------------
-// SECTION TITLE
-// ---------------------------------------------------------
+@Composable
+private fun ProfileStatCard(
+    modifier: Modifier,
+    title: String,
+    subtitle: String
+) {
+    Card(
+        modifier = modifier,
+        shape = RoundedCornerShape(22.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(vertical = 18.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = title,
+                color = CampusPurple,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.ExtraBold
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Text(
+                text = subtitle,
+                color = CampusTextMuted,
+                fontSize = 12.sp
+            )
+        }
+    }
+}
 
 @Composable
 private fun SectionTitle(
     title: String
 ) {
-
     Text(
         text = title,
-        color = DarkText,
+        color = CampusText,
         fontSize = 18.sp,
-        fontWeight = FontWeight.Bold
+        fontWeight = FontWeight.ExtraBold
     )
 }
-
-
-// ---------------------------------------------------------
-// ACCOUNT CARD
-// ---------------------------------------------------------
 
 @Composable
 private fun AccountCard(
@@ -355,23 +298,13 @@ private fun AccountCard(
     onFavoritesClick: () -> Unit,
     onNotificationsClick: () -> Unit
 ) {
-
     Card(
         modifier = Modifier.fillMaxWidth(),
-
-        shape = RoundedCornerShape(22.dp),
-
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White
-        ),
-
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 1.dp
-        )
+        shape = RoundedCornerShape(24.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-
         Column {
-
             ProfileMenuItem(
                 icon = {
                     Icon(
@@ -381,13 +314,11 @@ private fun AccountCard(
                     )
                 },
                 title = "My Orders",
-                subtitle = "View your previous orders",
+                subtitle = "View your previous campus orders",
                 onClick = onOrdersClick
             )
 
-
             ProfileDivider()
-
 
             ProfileMenuItem(
                 icon = {
@@ -398,13 +329,11 @@ private fun AccountCard(
                     )
                 },
                 title = "Favorites",
-                subtitle = "Your saved food items",
+                subtitle = "Your saved dishes and go-to stalls",
                 onClick = onFavoritesClick
             )
 
-
             ProfileDivider()
-
 
             ProfileMenuItem(
                 icon = {
@@ -415,17 +344,12 @@ private fun AccountCard(
                     )
                 },
                 title = "Notifications",
-                subtitle = "Order and reward updates",
+                subtitle = "Promotions, order alerts and reward updates",
                 onClick = onNotificationsClick
             )
         }
     }
 }
-
-
-// ---------------------------------------------------------
-// PROFILE MENU ITEM
-// ---------------------------------------------------------
 
 @Composable
 private fun ProfileMenuItem(
@@ -434,61 +358,41 @@ private fun ProfileMenuItem(
     subtitle: String,
     onClick: () -> Unit
 ) {
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable {
-                onClick()
-            }
-            .padding(
-                horizontal = 16.dp,
-                vertical = 15.dp
-            ),
-
+            .clickable { onClick() }
+            .padding(horizontal = 16.dp, vertical = 15.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-
         Box(
             modifier = Modifier
                 .size(42.dp)
                 .clip(RoundedCornerShape(13.dp))
-                .background(SoftPurple),
-
+                .background(CampusLavender),
             contentAlignment = Alignment.Center
         ) {
-
             icon()
         }
 
+        Spacer(modifier = Modifier.width(13.dp))
 
-        Spacer(
-            modifier = Modifier.width(13.dp)
-        )
-
-
-        Column(
-            modifier = Modifier.weight(1f)
-        ) {
-
+        Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = title,
-                color = DarkText,
+                color = CampusText,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.SemiBold
             )
 
-            Spacer(
-                modifier = Modifier.height(2.dp)
-            )
+            Spacer(modifier = Modifier.height(2.dp))
 
             Text(
                 text = subtitle,
-                color = GrayText,
+                color = CampusTextMuted,
                 fontSize = 11.sp
             )
         }
-
 
         Icon(
             imageVector = Icons.Default.ChevronRight,
@@ -499,14 +403,8 @@ private fun ProfileMenuItem(
     }
 }
 
-
-// ---------------------------------------------------------
-// DIVIDER
-// ---------------------------------------------------------
-
 @Composable
 private fun ProfileDivider() {
-
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -516,137 +414,90 @@ private fun ProfileDivider() {
     )
 }
 
-
-// ---------------------------------------------------------
-// REWARDS CARD
-// ---------------------------------------------------------
-
 @Composable
 private fun RewardsCard(
     onClick: () -> Unit
 ) {
-
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable {
-                onClick()
-            },
-
-        shape = RoundedCornerShape(22.dp),
-
-        colors = CardDefaults.cardColors(
-            containerColor = DarkPurple
-        )
+            .clickable { onClick() },
+        shape = RoundedCornerShape(24.dp),
+        colors = CardDefaults.cardColors(containerColor = CampusPurpleDark)
     ) {
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(18.dp),
-
+                .padding(20.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-
             Box(
                 modifier = Modifier
-                    .size(48.dp)
+                    .size(52.dp)
                     .clip(CircleShape)
-                    .background(
-                        CampusYellow.copy(alpha = 0.18f)
-                    ),
-
+                    .background(CampusYellow.copy(alpha = 0.18f)),
                 contentAlignment = Alignment.Center
             ) {
-
                 Icon(
                     imageVector = Icons.Default.Star,
                     contentDescription = null,
                     tint = CampusYellow,
-                    modifier = Modifier.size(25.dp)
+                    modifier = Modifier.size(26.dp)
                 )
             }
 
+            Spacer(modifier = Modifier.width(14.dp))
 
-            Spacer(
-                modifier = Modifier.width(13.dp)
-            )
-
-
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
-
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = "Bites Points",
                     color = Color.White,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
+                    fontSize = 17.sp,
+                    fontWeight = FontWeight.ExtraBold
                 )
 
-                Spacer(
-                    modifier = Modifier.height(3.dp)
-                )
+                Spacer(modifier = Modifier.height(3.dp))
 
                 Text(
-                    text = "120 points available",
-                    color = Color.White.copy(
-                        alpha = 0.72f
-                    ),
+                    text = "120 points available for your next combo meal",
+                    color = Color.White.copy(alpha = 0.76f),
                     fontSize = 12.sp
                 )
             }
 
-
-            Text(
-                text = "→",
-                color = CampusYellow,
-                fontSize = 23.sp,
-                fontWeight = FontWeight.Bold
+            Icon(
+                imageVector = Icons.Default.ChevronRight,
+                contentDescription = "Rewards",
+                tint = CampusYellow
             )
         }
     }
 }
 
-
-// ---------------------------------------------------------
-// LOGOUT
-// ---------------------------------------------------------
-
 @Composable
 private fun LogoutButton(
     onClick: () -> Unit
 ) {
-
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable {
-                onClick()
-            },
-
-        shape = RoundedCornerShape(18.dp),
-
+            .clickable { onClick() },
+        shape = RoundedCornerShape(20.dp),
         color = Color(0xFFFFF0F0)
     ) {
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-
             verticalAlignment = Alignment.CenterVertically
         ) {
-
             Icon(
                 imageVector = Icons.Default.Logout,
                 contentDescription = "Logout",
                 tint = Color(0xFFDC2626)
             )
 
-            Spacer(
-                modifier = Modifier.width(12.dp)
-            )
+            Spacer(modifier = Modifier.width(12.dp))
 
             Text(
                 text = "Logout",

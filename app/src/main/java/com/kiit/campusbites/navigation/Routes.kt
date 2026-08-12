@@ -2,6 +2,8 @@ package com.kiit.campusbites.navigation
 
 object Routes {
 
+    const val ARTWORK = "artwork"
+
     const val SPLASH = "splash"
 
     const val LOGIN = "login"
@@ -9,6 +11,8 @@ object Routes {
     const val SIGNUP = "signup"
 
     const val HOME = "home"
+
+    const val FOOD_COURTS = "food_courts"
 
     const val SEARCH = "search"
 

@@ -11,8 +11,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -20,6 +22,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.NotificationsNone
@@ -27,20 +30,20 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ReceiptLong
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -49,422 +52,253 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.material3.TextButton
-
-// ============================================================
-// CAMPUSBITES COLORS
-// ============================================================
-
-private val CampusYellow = Color(0xFFFFB91D)
-private val CampusPurple = Color(0xFF5B21B6)
-private val DarkPurple = Color(0xFF4F1D95)
-private val CampusPink = Color(0xFFE83EBC)
-
-private val BackgroundCream = Color(0xFFFFFCF5)
-private val SoftPurple = Color(0xFFF4F0FF)
-private val DarkText = Color(0xFF29105F)
-private val GrayText = Color(0xFF77727F)
-
-
-// ============================================================
-// PLACEHOLDER DATA
-// IMPORTANT:
-// Later these will come from Firebase/ViewModel.
-// ============================================================
+import com.kiit.campusbites.ui.theme.CampusCream
+import com.kiit.campusbites.ui.theme.CampusDanger
+import com.kiit.campusbites.ui.theme.CampusLavender
+import com.kiit.campusbites.ui.theme.CampusPink
+import com.kiit.campusbites.ui.theme.CampusPurple
+import com.kiit.campusbites.ui.theme.CampusPurpleDark
+import com.kiit.campusbites.ui.theme.CampusSuccess
+import com.kiit.campusbites.ui.theme.CampusText
+import com.kiit.campusbites.ui.theme.CampusTextMuted
+import com.kiit.campusbites.ui.theme.CampusYellow
+import com.kiit.campusbites.ui.theme.CampusYellowSoft
 
 data class FoodCourt(
     val name: String,
-    val imageEmoji: String,
+    val imageLabel: String,
     val isOpen: Boolean,
-    val estimatedWait: String
+    val estimatedWait: String,
+    val highlight: String
 )
 
 data class PopularFood(
     val name: String,
     val foodCourtName: String,
-    val imageEmoji: String,
+    val imageLabel: String,
     val price: Int,
     val rating: Double
 )
 
 data class FoodCategory(
     val name: String,
-    val emoji: String
+    val badge: String
 )
-
 
 private val sampleFoodCourts = listOf(
-    FoodCourt(
-        name = "Food Court 1",
-        imageEmoji = "🍔",
-        isOpen = true,
-        estimatedWait = "~15 min"
-    ),
-    FoodCourt(
-        name = "Food Court 2",
-        imageEmoji = "🍕",
-        isOpen = true,
-        estimatedWait = "~10 min"
-    ),
-    FoodCourt(
-        name = "Food Court 3",
-        imageEmoji = "🥤",
-        isOpen = true,
-        estimatedWait = "~20 min"
-    ),
-    FoodCourt(
-        name = "Food Court 4",
-        imageEmoji = "🍜",
-        isOpen = false,
-        estimatedWait = ""
-    )
+    FoodCourt("Central Bites", "BURGERS", true, "12 min", "Always packed"),
+    FoodCourt("Pizza Point", "PIZZA", true, "10 min", "Cheese specials"),
+    FoodCourt("Chill Cups", "DRINKS", true, "8 min", "Cold coffees"),
+    FoodCourt("Spice Lane", "ROLLS", false, "", "Opens at 5 PM")
 )
-
 
 private val samplePopularFoods = listOf(
-    PopularFood(
-        name = "Classic Burger",
-        foodCourtName = "Food Court 1",
-        imageEmoji = "🍔",
-        price = 89,
-        rating = 4.7
-    ),
-    PopularFood(
-        name = "Special Samosa",
-        foodCourtName = "Food Court 2",
-        imageEmoji = "🥟",
-        price = 30,
-        rating = 4.8
-    ),
-    PopularFood(
-        name = "Chicken Roll",
-        foodCourtName = "Food Court 3",
-        imageEmoji = "🌯",
-        price = 99,
-        rating = 4.6
-    ),
-    PopularFood(
-        name = "Cold Coffee",
-        foodCourtName = "Food Court 4",
-        imageEmoji = "🥤",
-        price = 69,
-        rating = 4.5
-    )
+    PopularFood("Smash Burger", "Central Bites", "CB", 129, 4.8),
+    PopularFood("Paneer Slice", "Pizza Point", "PP", 149, 4.7),
+    PopularFood("Cold Coffee", "Chill Cups", "CC", 79, 4.6),
+    PopularFood("Chicken Roll", "Spice Lane", "SL", 99, 4.5)
 )
-
 
 private val categories = listOf(
-    FoodCategory("Burgers", "🍔"),
-    FoodCategory("Pizza", "🍕"),
-    FoodCategory("Snacks", "🍟"),
-    FoodCategory("Drinks", "🥤"),
-    FoodCategory("Meals", "🍜"),
-    FoodCategory("Desserts", "🍰")
+    FoodCategory("Burgers", "Hot"),
+    FoodCategory("Pizza", "Cheesy"),
+    FoodCategory("Snacks", "Quick"),
+    FoodCategory("Drinks", "Cool"),
+    FoodCategory("Meals", "Filling"),
+    FoodCategory("Desserts", "Sweet")
 )
-
-
-// ============================================================
-// HOME SCREEN
-// ============================================================
 
 @Composable
 fun HomeScreen(
     onFoodCourtsSeeAll: () -> Unit = {},
     onProfileClick: () -> Unit = {}
 ) {
-    // Temporary values.
-    // Later these will come from the logged-in student.
     val studentName = "Naveen"
+    val cartCount = 2
+    val hasActiveOrder = true
 
-    // Temporary state.
-    // Later these will come from cart/order data.
-    val cartCount = 0
-    val hasActiveOrder = false
-
-    var selectedBottomTab by remember {
-        mutableIntStateOf(0)
-    }
+    var selectedBottomTab by remember { mutableIntStateOf(0) }
 
     Scaffold(
-        containerColor = BackgroundCream,
-
+        containerColor = CampusCream,
         topBar = {
-            HomeTopBar(
-                onProfileClick = onProfileClick
-            )
+            HomeTopBar(onProfileClick = onProfileClick)
         },
-
         bottomBar = {
             HomeBottomNavigation(
                 selectedTab = selectedBottomTab,
-                onTabSelected = {
-                    selectedBottomTab = it
-                },
+                onTabSelected = { selectedBottomTab = it },
                 onProfileClick = onProfileClick
             )
+        },
+        floatingActionButton = {
+            CartButton(cartCount = cartCount)
         }
     ) { innerPadding ->
-
         LazyColumn(
-
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
-
-            contentPadding = PaddingValues(
-                top = 18.dp,
-                bottom = 30.dp
-            ),
-
-            verticalArrangement = Arrangement.spacedBy(24.dp)
+            contentPadding = PaddingValues(top = 18.dp, bottom = 26.dp),
+            verticalArrangement = Arrangement.spacedBy(22.dp)
         ) {
-
-            // ------------------------------------------------
-            // GREETING
-            // ------------------------------------------------
-
             item {
-
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 20.dp)
                 ) {
-
                     Text(
-                        text = "Hey, $studentName! 👋",
-                        color = DarkText,
-                        fontSize = 27.sp,
-                        fontWeight = FontWeight.Bold
+                        text = "Hey, $studentName",
+                        color = CampusText,
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.ExtraBold
                     )
 
-                    Spacer(
-                        modifier = Modifier.height(5.dp)
-                    )
+                    Spacer(modifier = Modifier.height(6.dp))
 
                     Text(
-                        text = "What are you craving today?",
-                        color = GrayText,
+                        text = "Good food is a few taps away. Pick up faster, skip the line.",
+                        color = CampusTextMuted,
                         fontSize = 15.sp
                     )
                 }
             }
 
+            item { SearchBar() }
 
-            // ------------------------------------------------
-            // SEARCH
-            // ------------------------------------------------
-
-            item {
-                SearchBar()
-            }
-
-
-            // ------------------------------------------------
-            // ACTIVE ORDER
-            // ------------------------------------------------
+            item { HighlightBanner() }
 
             if (hasActiveOrder) {
-
-                item {
-                    ActiveOrderCard()
-                }
+                item { ActiveOrderCard() }
             }
 
-
-            // ------------------------------------------------
-            // FOOD COURTS HEADER
-            // ------------------------------------------------
+            item { CategoryRail() }
 
             item {
-
                 SectionHeader(
                     title = "Food Courts",
-                    actionText = "See all →",
+                    actionText = "See all ->",
                     onActionClick = onFoodCourtsSeeAll
                 )
             }
 
-
-            // ------------------------------------------------
-            // FOOD COURTS
-            // ------------------------------------------------
-
             item {
-
                 LazyRow(
-                    contentPadding = PaddingValues(
-                        horizontal = 20.dp
-                    ),
-
+                    contentPadding = PaddingValues(horizontal = 20.dp),
                     horizontalArrangement = Arrangement.spacedBy(14.dp)
                 ) {
-
                     items(sampleFoodCourts) { foodCourt ->
-
-                        FoodCourtCard(
-                            foodCourt = foodCourt
-                        )
+                        FoodCourtCard(foodCourt = foodCourt)
                     }
                 }
             }
 
-
-            // ------------------------------------------------
-            // POPULAR HEADER
-            // ------------------------------------------------
-
             item {
-
                 SectionHeader(
-                    title = "Popular on Campus 🔥",
-                    actionText = "See all →",
-                    onActionClick = {
-                        // Popular screen baad mein connect karenge
-                    }
+                    title = "Popular on Campus",
+                    actionText = "Trending ->",
+                    onActionClick = {}
                 )
             }
 
-
-            // ------------------------------------------------
-            // POPULAR FOOD
-            // ------------------------------------------------
-
             item {
-
                 LazyRow(
-                    contentPadding = PaddingValues(
-                        horizontal = 20.dp
-                    ),
-
+                    contentPadding = PaddingValues(horizontal = 20.dp),
                     horizontalArrangement = Arrangement.spacedBy(14.dp)
                 ) {
-
                     items(samplePopularFoods) { food ->
-
-                        PopularFoodCard(
-                            food = food
-                        )
+                        PopularFoodCard(food = food)
                     }
                 }
             }
 
-
-            // ------------------------------------------------
-            // CAMPUS REWARDS
-            // ------------------------------------------------
-
-            item {
-
-                CampusRewardsCard()
-            }
+            item { CampusRewardsCard() }
         }
     }
 }
-
-
-// ============================================================
-// TOP BAR
-// ============================================================
-
 
 @Composable
 private fun HomeTopBar(
     onProfileClick: () -> Unit
 ) {
-
     Surface(
         modifier = Modifier
             .fillMaxWidth()
             .statusBarsPadding(),
-
-        color = BackgroundCream
+        color = CampusCream
     ) {
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(
-                    horizontal = 20.dp,
-                    vertical = 12.dp
-                ),
-
+                .padding(horizontal = 20.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-
-            // Burger logo placeholder
             Box(
                 modifier = Modifier
-                    .size(42.dp)
-                    .clip(
-                        RoundedCornerShape(13.dp)
-                    )
-                    .background(CampusYellow),
-
+                    .size(46.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(
+                        Brush.linearGradient(
+                            colors = listOf(CampusYellow, Color(0xFFFFD970))
+                        )
+                    ),
                 contentAlignment = Alignment.Center
             ) {
-
                 Text(
-                    text = "🍔",
-                    fontSize = 22.sp
+                    text = "CB",
+                    fontWeight = FontWeight.ExtraBold,
+                    color = CampusPurpleDark
                 )
             }
 
+            Spacer(modifier = Modifier.width(12.dp))
 
-            Spacer(
-                modifier = Modifier.width(10.dp)
-            )
-
-
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
-
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = "CampusBites",
-                    color = DarkText,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
+                    color = CampusText,
+                    fontSize = 19.sp,
+                    fontWeight = FontWeight.ExtraBold
                 )
-
                 Text(
                     text = "KIIT Campus",
-                    color = GrayText,
-                    fontSize = 11.sp
+                    color = CampusTextMuted,
+                    fontSize = 12.sp
                 )
             }
-
-
-            IconButton(
-                onClick = {}
-            ) {
-
-                Icon(
-                    imageVector = Icons.Default.NotificationsNone,
-                    contentDescription = "Notifications",
-                    tint = DarkText
-                )
-            }
-
 
             Box(
                 modifier = Modifier
                     .size(38.dp)
                     .clip(CircleShape)
-                    .background(SoftPurple)
-                    .clickable {
-                        onProfileClick()
-                    },
-
+                    .background(Color.White)
+                    .clickable { },
                 contentAlignment = Alignment.Center
             ) {
+                Icon(
+                    imageVector = Icons.Default.NotificationsNone,
+                    contentDescription = "Notifications",
+                    tint = CampusText
+                )
+            }
 
+            Spacer(modifier = Modifier.width(10.dp))
+
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .background(CampusLavender)
+                    .clickable { onProfileClick() },
+                contentAlignment = Alignment.Center
+            ) {
                 Icon(
                     imageVector = Icons.Default.Person,
                     contentDescription = "Profile",
@@ -476,50 +310,36 @@ private fun HomeTopBar(
     }
 }
 
-
-// ============================================================
-// SEARCH BAR
-// ============================================================
-
 @Composable
 private fun SearchBar() {
-
     Surface(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp)
-            .height(56.dp)
+            .height(58.dp)
             .clickable {},
-
-        shape = RoundedCornerShape(18.dp),
-
+        shape = RoundedCornerShape(20.dp),
         color = Color.White,
-
-        shadowElevation = 2.dp
+        shadowElevation = 4.dp
     ) {
-
         Row(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 16.dp),
-
             verticalAlignment = Alignment.CenterVertically
         ) {
-
             Icon(
                 imageVector = Icons.Default.Search,
                 contentDescription = "Search",
                 tint = CampusPurple,
-                modifier = Modifier.size(23.dp)
+                modifier = Modifier.size(22.dp)
             )
 
-            Spacer(
-                modifier = Modifier.width(12.dp)
-            )
+            Spacer(modifier = Modifier.width(12.dp))
 
             Text(
-                text = "Search food, restaurants...",
-                color = Color(0xFF918C96),
+                text = "Search food, stalls, combos...",
+                color = CampusTextMuted,
                 fontSize = 14.sp,
                 modifier = Modifier.weight(1f)
             )
@@ -527,17 +347,94 @@ private fun SearchBar() {
             Icon(
                 imageVector = Icons.Default.Tune,
                 contentDescription = "Filter",
-                tint = GrayText,
+                tint = CampusTextMuted,
                 modifier = Modifier.size(20.dp)
             )
         }
     }
 }
 
+@Composable
+private fun HighlightBanner() {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp),
+        shape = RoundedCornerShape(30.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
+    ) {
+        Box(
+            modifier = Modifier
+                .background(
+                    Brush.linearGradient(
+                        colors = listOf(CampusPurpleDark, CampusPurple, CampusPink)
+                    )
+                )
+                .padding(22.dp)
+        ) {
+            Column {
+                Text(
+                    text = "Lunch Rush Offer",
+                    color = CampusYellowSoft,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold
+                )
 
-// ============================================================
-// SECTION HEADER
-// ============================================================
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "Save 20% on combo meals before 2 PM",
+                    color = Color.White,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.ExtraBold
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "Fresh campus favourites, faster delivery and pick-up friendly ordering.",
+                    color = Color.White.copy(alpha = 0.84f),
+                    fontSize = 14.sp
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun CategoryRail() {
+    LazyRow(
+        contentPadding = PaddingValues(horizontal = 20.dp),
+        horizontalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        items(categories) { category ->
+            Card(
+                shape = RoundedCornerShape(18.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.White),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = category.badge,
+                        color = CampusPurple,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = category.name,
+                        color = CampusText,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+            }
+        }
+    }
+}
 
 @Composable
 private fun SectionHeader(
@@ -545,34 +442,24 @@ private fun SectionHeader(
     actionText: String,
     onActionClick: () -> Unit
 ) {
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp),
-
         verticalAlignment = Alignment.CenterVertically
     ) {
-
         Text(
             text = title,
-            color = DarkText,
-            fontSize = 19.sp,
-            fontWeight = FontWeight.Bold,
+            color = CampusText,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.ExtraBold,
             modifier = Modifier.weight(1f)
         )
 
         TextButton(
-            onClick = {
-                onActionClick()
-            },
-
-            contentPadding = PaddingValues(
-                horizontal = 4.dp,
-                vertical = 0.dp
-            )
+            onClick = onActionClick,
+            contentPadding = PaddingValues(horizontal = 4.dp, vertical = 0.dp)
         ) {
-
             Text(
                 text = actionText,
                 color = CampusPurple,
@@ -583,256 +470,197 @@ private fun SectionHeader(
     }
 }
 
-
-// ============================================================
-// FOOD COURT CARD
-// ============================================================
-
 @Composable
 private fun FoodCourtCard(
     foodCourt: FoodCourt
 ) {
-
     Card(
         modifier = Modifier
-            .width(155.dp)
+            .width(180.dp)
             .clickable {},
-
-        shape = RoundedCornerShape(20.dp),
-
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White
-        ),
-
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 2.dp
-        )
+        shape = RoundedCornerShape(24.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
     ) {
-
         Column {
-
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(110.dp)
-                    .background(SoftPurple),
-
-                contentAlignment = Alignment.Center
+                    .height(118.dp)
+                    .background(
+                        Brush.linearGradient(
+                            colors = listOf(CampusLavender, Color(0xFFECE1FF))
+                        )
+                    )
+                    .padding(14.dp)
             ) {
-
                 Text(
-                    text = foodCourt.imageEmoji,
-                    fontSize = 48.sp
+                    text = foodCourt.imageLabel,
+                    color = CampusPurple,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.ExtraBold
                 )
+
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .clip(RoundedCornerShape(14.dp))
+                        .background(Color.White.copy(alpha = 0.72f))
+                        .padding(horizontal = 12.dp, vertical = 8.dp)
+                ) {
+                    Text(
+                        text = foodCourt.highlight,
+                        color = CampusText,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
             }
 
-
             Column(
-                modifier = Modifier.padding(12.dp)
+                modifier = Modifier.padding(14.dp)
             ) {
-
                 Text(
                     text = foodCourt.name,
-                    color = DarkText,
-                    fontSize = 15.sp,
+                    color = CampusText,
+                    fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
 
-                Spacer(
-                    modifier = Modifier.height(6.dp)
-                )
+                Spacer(modifier = Modifier.height(8.dp))
 
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Box(
                         modifier = Modifier
-                            .size(7.dp)
+                            .size(8.dp)
                             .clip(CircleShape)
-                            .background(
-                                if (foodCourt.isOpen)
-                                    Color(0xFF22C55E)
-                                else
-                                    Color(0xFFEF4444)
-                            )
+                            .background(if (foodCourt.isOpen) CampusSuccess else CampusDanger)
                     )
 
-                    Spacer(
-                        modifier = Modifier.width(5.dp)
-                    )
+                    Spacer(modifier = Modifier.width(6.dp))
 
                     Text(
-                        text = if (foodCourt.isOpen)
-                            "Open"
-                        else
-                            "Closed",
-
-                        color = if (foodCourt.isOpen)
-                            Color(0xFF16A34A)
-                        else
-                            Color(0xFFDC2626),
-
-                        fontSize = 11.sp,
+                        text = if (foodCourt.isOpen) "Open now" else "Closed",
+                        color = if (foodCourt.isOpen) CampusSuccess else CampusDanger,
+                        fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold
                     )
                 }
 
+                Spacer(modifier = Modifier.height(6.dp))
 
-                if (foodCourt.isOpen) {
-
-                    Spacer(
-                        modifier = Modifier.height(4.dp)
-                    )
-
-                    Text(
-                        text = foodCourt.estimatedWait,
-                        color = GrayText,
-                        fontSize = 11.sp
-                    )
-                }
+                Text(
+                    text = if (foodCourt.isOpen) "Average wait ${foodCourt.estimatedWait}" else foodCourt.highlight,
+                    color = CampusTextMuted,
+                    fontSize = 12.sp
+                )
             }
         }
     }
 }
-
-
-// ============================================================
-// POPULAR FOOD CARD
-// ============================================================
 
 @Composable
 private fun PopularFoodCard(
     food: PopularFood
 ) {
-
     Card(
         modifier = Modifier
-            .width(195.dp)
+            .width(210.dp)
             .clickable {},
-
-        shape = RoundedCornerShape(20.dp),
-
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White
-        ),
-
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 2.dp
-        )
+        shape = RoundedCornerShape(24.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
     ) {
-
         Column {
-
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(130.dp)
-                    .background(SoftPurple)
-            ) {
-
-                Text(
-                    text = food.imageEmoji,
-                    fontSize = 60.sp,
-                    modifier = Modifier.align(
-                        Alignment.Center
+                    .height(132.dp)
+                    .background(
+                        Brush.linearGradient(
+                            colors = listOf(CampusYellowSoft, Color(0xFFFFF3D1))
+                        )
                     )
-                )
+            ) {
+                Box(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .size(58.dp)
+                        .clip(CircleShape)
+                        .background(Color.White.copy(alpha = 0.72f)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = food.imageLabel,
+                        color = CampusPurpleDark,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                }
 
-
-                Surface(
+                Box(
                     modifier = Modifier
                         .align(Alignment.TopEnd)
-                        .padding(9.dp)
-                        .size(32.dp),
-
-                    shape = CircleShape,
-
-                    color = Color.White.copy(
-                        alpha = 0.92f
-                    )
+                        .padding(12.dp)
+                        .size(34.dp)
+                        .clip(CircleShape)
+                        .background(Color.White.copy(alpha = 0.92f)),
+                    contentAlignment = Alignment.Center
                 ) {
-
-                    IconButton(
-                        onClick = {}
-                    ) {
-
-                        Icon(
-                            imageVector = Icons.Default.FavoriteBorder,
-                            contentDescription = "Favorite",
-                            tint = CampusPink,
-                            modifier = Modifier.size(18.dp)
-                        )
-                    }
+                    Icon(
+                        imageVector = Icons.Default.FavoriteBorder,
+                        contentDescription = "Favorite",
+                        tint = CampusPink,
+                        modifier = Modifier.size(18.dp)
+                    )
                 }
             }
 
-
             Column(
-                modifier = Modifier.padding(12.dp)
+                modifier = Modifier.padding(14.dp)
             ) {
-
                 Text(
                     text = food.name,
-                    color = DarkText,
-                    fontSize = 15.sp,
+                    color = CampusText,
+                    fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 )
 
-
-                Spacer(
-                    modifier = Modifier.height(3.dp)
-                )
-
+                Spacer(modifier = Modifier.height(3.dp))
 
                 Text(
                     text = food.foodCourtName,
-                    color = GrayText,
-                    fontSize = 11.sp
+                    color = CampusTextMuted,
+                    fontSize = 12.sp
                 )
 
+                Spacer(modifier = Modifier.height(10.dp))
 
-                Spacer(
-                    modifier = Modifier.height(7.dp)
-                )
-
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         imageVector = Icons.Default.Star,
                         contentDescription = null,
                         tint = CampusYellow,
-                        modifier = Modifier.size(15.dp)
+                        modifier = Modifier.size(16.dp)
                     )
 
-                    Spacer(
-                        modifier = Modifier.width(3.dp)
-                    )
+                    Spacer(modifier = Modifier.width(4.dp))
 
                     Text(
                         text = food.rating.toString(),
-                        color = DarkText,
-                        fontSize = 11.sp,
+                        color = CampusText,
+                        fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold
                     )
 
-
-                    Spacer(
-                        modifier = Modifier.weight(1f)
-                    )
-
+                    Spacer(modifier = Modifier.weight(1f))
 
                     Text(
-                        text = "₹${food.price}",
+                        text = "Rs ${food.price}",
                         color = CampusPurple,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold
+                        fontSize = 17.sp,
+                        fontWeight = FontWeight.ExtraBold
                     )
                 }
             }
@@ -840,298 +668,209 @@ private fun PopularFoodCard(
     }
 }
 
-
-// ============================================================
-// CAMPUS REWARDS
-// ============================================================
-
 @Composable
 private fun CampusRewardsCard() {
-
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp)
             .clickable {},
-
-        shape = RoundedCornerShape(24.dp),
-
-        colors = CardDefaults.cardColors(
-            containerColor = DarkPurple
-        )
+        shape = RoundedCornerShape(26.dp),
+        colors = CardDefaults.cardColors(containerColor = CampusPurpleDark)
     ) {
-
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(22.dp)
         ) {
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(
                     modifier = Modifier
-                        .size(45.dp)
+                        .size(48.dp)
                         .clip(CircleShape)
-                        .background(
-                            CampusYellow.copy(
-                                alpha = 0.18f
-                            )
-                        ),
-
+                        .background(CampusYellow.copy(alpha = 0.18f)),
                     contentAlignment = Alignment.Center
                 ) {
-
                     Text(
-                        text = "🏆",
-                        fontSize = 23.sp
+                        text = "RP",
+                        color = CampusYellow,
+                        fontSize = 17.sp,
+                        fontWeight = FontWeight.ExtraBold
                     )
                 }
 
+                Spacer(modifier = Modifier.width(12.dp))
 
-                Spacer(
-                    modifier = Modifier.width(12.dp)
-                )
-
-
-                Column(
-                    modifier = Modifier.weight(1f)
-                ) {
-
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = "Campus Rewards",
                         color = Color.White,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
+                        fontSize = 19.sp,
+                        fontWeight = FontWeight.ExtraBold
                     )
 
                     Text(
                         text = "Earn Bites Points with every order",
-                        color = Color.White.copy(
-                            alpha = 0.72f
-                        ),
+                        color = Color.White.copy(alpha = 0.72f),
                         fontSize = 12.sp
                     )
                 }
 
-
-                Text(
-                    text = "→",
-                    color = CampusYellow,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
+                Icon(
+                    imageVector = Icons.Default.ChevronRight,
+                    contentDescription = "Rewards",
+                    tint = CampusYellow
                 )
             }
 
-
-            Spacer(
-                modifier = Modifier.height(18.dp)
-            )
-
-
-            Row(
-                verticalAlignment = Alignment.Bottom
-            ) {
-
-                Text(
-                    text = "120",
-                    color = CampusYellow,
-                    fontSize = 32.sp,
-                    fontWeight = FontWeight.Bold
-                )
-
-                Spacer(
-                    modifier = Modifier.width(6.dp)
-                )
-
-                Text(
-                    text = "Bites Points",
-                    color = Color.White.copy(
-                        alpha = 0.8f
-                    ),
-                    fontSize = 13.sp,
-                    modifier = Modifier.padding(
-                        bottom = 4.dp
-                    )
-                )
-            }
-
-
-            Spacer(
-                modifier = Modifier.height(8.dp)
-            )
-
+            Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Earn 5 Bites Points for every ₹200 spent",
-                color = Color.White.copy(
-                    alpha = 0.68f
-                ),
-                fontSize = 11.sp
+                text = "120",
+                color = CampusYellow,
+                fontSize = 34.sp,
+                fontWeight = FontWeight.ExtraBold
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Text(
+                text = "Bites Points available for your next meal.",
+                color = Color.White.copy(alpha = 0.78f),
+                fontSize = 13.sp
             )
         }
     }
 }
 
-
-// ============================================================
-// ACTIVE ORDER
-// ============================================================
-
 @Composable
 private fun ActiveOrderCard() {
-
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp),
-
-        shape = RoundedCornerShape(22.dp),
-
-        colors = CardDefaults.cardColors(
-            containerColor = CampusPurple
-        )
+        shape = RoundedCornerShape(24.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
     ) {
-
-        Column(
-            modifier = Modifier.padding(18.dp)
+        Row(
+            modifier = Modifier.padding(18.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
+            Box(
+                modifier = Modifier
+                    .size(54.dp)
+                    .clip(RoundedCornerShape(18.dp))
+                    .background(
+                        Brush.linearGradient(
+                            colors = listOf(CampusPurple, CampusPink)
+                        )
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "ON",
+                    color = Color.White,
+                    fontWeight = FontWeight.ExtraBold
+                )
+            }
+
+            Spacer(modifier = Modifier.width(14.dp))
+
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = "Your order is being prepared",
+                    color = CampusText,
+                    fontSize = 17.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Text(
+                    text = "Order #CB1024 · Pickup in 9 min",
+                    color = CampusTextMuted,
+                    fontSize = 13.sp
+                )
+            }
 
             Text(
-                text = "Your current order 🍔",
-                color = Color.White,
-                fontSize = 17.sp,
+                text = "Track",
+                color = CampusPurple,
                 fontWeight = FontWeight.Bold
-            )
-
-            Spacer(
-                modifier = Modifier.height(5.dp)
-            )
-
-            Text(
-                text = "Order #CB1024",
-                color = Color.White.copy(
-                    alpha = 0.7f
-                ),
-                fontSize = 12.sp
-            )
-
-            Spacer(
-                modifier = Modifier.height(12.dp)
-            )
-
-            Text(
-                text = "Preparing your order...",
-                color = Color.White,
-                fontSize = 14.sp
             )
         }
     }
 }
-
-
-// ============================================================
-// BOTTOM NAVIGATION
-// ============================================================
 
 @Composable
 private fun HomeBottomNavigation(
     selectedTab: Int,
     onTabSelected: (Int) -> Unit,
     onProfileClick: () -> Unit
-)  {
-
+) {
     NavigationBar(
+        modifier = Modifier.navigationBarsPadding(),
         containerColor = Color.White,
-        tonalElevation = 4.dp
+        tonalElevation = 6.dp
     ) {
-
         NavigationBarItem(
             selected = selectedTab == 0,
-            onClick = {
-                onTabSelected(0)
-            },
+            onClick = { onTabSelected(0) },
             icon = {
                 Icon(
                     imageVector = Icons.Default.Home,
                     contentDescription = "Home"
                 )
             },
-            label = {
-                Text("Home")
-            }
+            label = { Text("Home") }
         )
-
 
         NavigationBarItem(
             selected = selectedTab == 1,
-            onClick = {
-                onTabSelected(1)
-            },
+            onClick = { onTabSelected(1) },
             icon = {
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = "Search"
                 )
             },
-            label = {
-                Text("Search")
-            }
+            label = { Text("Search") }
         )
-
 
         NavigationBarItem(
             selected = selectedTab == 2,
-            onClick = {
-                onTabSelected(2)
-            },
+            onClick = { onTabSelected(2) },
             icon = {
                 Icon(
                     imageVector = Icons.Default.ReceiptLong,
                     contentDescription = "Orders"
                 )
             },
-            label = {
-                Text("Orders")
-            }
+            label = { Text("Orders") }
         )
-
 
         NavigationBarItem(
             selected = selectedTab == 3,
-
             onClick = {
                 onTabSelected(3)
                 onProfileClick()
             },
-
             icon = {
                 Icon(
                     imageVector = Icons.Default.Person,
                     contentDescription = "Profile"
                 )
             },
-
-            label = {
-                Text("Profile")
-            }
+            label = { Text("Profile") }
         )
     }
 }
-
-
-// ============================================================
-// CART BUTTON
-// ============================================================
 
 @Composable
 private fun CartButton(
     cartCount: Int
 ) {
-
     BadgedBox(
         badge = {
-
             Badge(
                 containerColor = CampusPink
             ) {
@@ -1139,12 +878,15 @@ private fun CartButton(
             }
         }
     ) {
-
         FilledIconButton(
             onClick = {},
-            modifier = Modifier.size(58.dp)
+            modifier = Modifier.size(60.dp),
+            shape = CircleShape,
+            colors = androidx.compose.material3.IconButtonDefaults.filledIconButtonColors(
+                containerColor = CampusPurple,
+                contentColor = Color.White
+            )
         ) {
-
             Icon(
                 imageVector = Icons.Default.ShoppingCart,
                 contentDescription = "Cart"
