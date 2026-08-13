@@ -62,7 +62,6 @@ fun VendorProfileScreen(
             .padding(horizontal = 20.dp, vertical = 12.dp)
     ) {
 
-        // Back button
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.End
@@ -81,7 +80,7 @@ fun VendorProfileScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Title
+
         Text(
             text = "🏪 SHOP PROFILE",
             fontSize = 31.sp,
@@ -96,7 +95,7 @@ fun VendorProfileScreen(
 
         Spacer(modifier = Modifier.height(22.dp))
 
-        // Vendor name
+
         OutlinedTextField(
             value = name,
             onValueChange = {
@@ -111,7 +110,7 @@ fun VendorProfileScreen(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // Shop name
+
         OutlinedTextField(
             value = shopName,
             onValueChange = {
@@ -126,7 +125,7 @@ fun VendorProfileScreen(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // Description
+
         OutlinedTextField(
             value = description,
             onValueChange = {
@@ -141,7 +140,6 @@ fun VendorProfileScreen(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // Waiting time
         OutlinedTextField(
             value = waitTime,
             onValueChange = {
@@ -156,7 +154,7 @@ fun VendorProfileScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Shop status
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -198,7 +196,6 @@ fun VendorProfileScreen(
 
         Spacer(modifier = Modifier.height(25.dp))
 
-        // Save button
         Button(
             onClick = onSaveClick,
             modifier = Modifier

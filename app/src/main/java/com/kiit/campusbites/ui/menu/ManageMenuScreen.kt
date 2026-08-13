@@ -53,9 +53,6 @@ fun ManageMenuScreen(
             )
     ) {
 
-        // ---------------------------------------------
-        // BACK BUTTON
-        // ---------------------------------------------
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -80,9 +77,6 @@ fun ManageMenuScreen(
             modifier = Modifier.height(8.dp)
         )
 
-        // ---------------------------------------------
-        // HEADER
-        // ---------------------------------------------
 
         Text(
             text = "🍽️ MENU",
@@ -100,9 +94,7 @@ fun ManageMenuScreen(
             modifier = Modifier.height(18.dp)
         )
 
-        // ---------------------------------------------
-        // ADD FOOD
-        // ---------------------------------------------
+
 
         Button(
             onClick = onAddFoodClick,
@@ -126,9 +118,6 @@ fun ManageMenuScreen(
             modifier = Modifier.height(18.dp)
         )
 
-        // ---------------------------------------------
-        // FOOD LIST
-        // ---------------------------------------------
 
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(14.dp)
@@ -160,7 +149,7 @@ fun ManageMenuScreen(
                             modifier = Modifier.padding(18.dp)
                         ) {
 
-                            // FOOD NAME
+
 
                             Text(
                                 text = food.name,
@@ -172,7 +161,7 @@ fun ManageMenuScreen(
                                 modifier = Modifier.height(6.dp)
                             )
 
-                            // CATEGORY
+
 
                             Text(
                                 text = food.category,
@@ -184,7 +173,7 @@ fun ManageMenuScreen(
                                 modifier = Modifier.height(8.dp)
                             )
 
-                            // PRICE
+
 
                             Text(
                                 text = food.price,
@@ -196,7 +185,7 @@ fun ManageMenuScreen(
                                 modifier = Modifier.height(8.dp)
                             )
 
-                            // AVAILABILITY
+
 
                             Text(
                                 text =
@@ -216,7 +205,7 @@ fun ManageMenuScreen(
                                 modifier = Modifier.height(14.dp)
                             )
 
-                            // BUTTONS
+
 
                             Row(
                                 modifier = Modifier.fillMaxWidth(),

@@ -34,7 +34,7 @@ fun VendorPerformanceScreen(
             .padding(horizontal = 20.dp, vertical = 12.dp)
     ) {
 
-        // Back button
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.End
@@ -52,7 +52,7 @@ fun VendorPerformanceScreen(
             modifier = Modifier.height(8.dp)
         )
 
-        // Title
+
         Text(
             text = "📈 PERFORMANCE",
             fontSize = 31.sp,
@@ -69,7 +69,7 @@ fun VendorPerformanceScreen(
             modifier = Modifier.height(22.dp)
         )
 
-        // Revenue
+
         PerformanceCard(
             emoji = "💰",
             title = "Today's Revenue",
@@ -82,7 +82,7 @@ fun VendorPerformanceScreen(
             modifier = Modifier.height(12.dp)
         )
 
-        // Orders
+
         PerformanceCard(
             emoji = "📦",
             title = "Total Orders",
@@ -95,7 +95,7 @@ fun VendorPerformanceScreen(
             modifier = Modifier.height(12.dp)
         )
 
-        // Items
+
         PerformanceCard(
             emoji = "🍔",
             title = "Items Sold",
@@ -108,7 +108,7 @@ fun VendorPerformanceScreen(
             modifier = Modifier.height(12.dp)
         )
 
-        // Rating
+
         PerformanceCard(
             emoji = "⭐",
             title = "Customer Rating",
@@ -121,7 +121,7 @@ fun VendorPerformanceScreen(
             modifier = Modifier.height(20.dp)
         )
 
-        // Best seller
+
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(22.dp),

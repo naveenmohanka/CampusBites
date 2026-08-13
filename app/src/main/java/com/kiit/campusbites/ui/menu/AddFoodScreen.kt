@@ -70,10 +70,6 @@ fun AddFoodScreen(
             )
     ) {
 
-        // ---------------------------------------------
-        // BACK
-        // ---------------------------------------------
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.End
@@ -98,10 +94,6 @@ fun AddFoodScreen(
         )
 
 
-        // ---------------------------------------------
-        // HEADER
-        // ---------------------------------------------
-
         Text(
             text = "✨ ADD NEW FOOD",
             fontSize = 31.sp,
@@ -119,9 +111,7 @@ fun AddFoodScreen(
         )
 
 
-        // ---------------------------------------------
-        // FOOD NAME
-        // ---------------------------------------------
+
 
         OutlinedTextField(
             value = foodName,
@@ -150,10 +140,6 @@ fun AddFoodScreen(
         )
 
 
-        // ---------------------------------------------
-        // CATEGORY
-        // ---------------------------------------------
-
         OutlinedTextField(
             value = category,
 
@@ -181,9 +167,6 @@ fun AddFoodScreen(
         )
 
 
-        // ---------------------------------------------
-        // DESCRIPTION
-        // ---------------------------------------------
 
         OutlinedTextField(
             value = description,
@@ -212,9 +195,6 @@ fun AddFoodScreen(
         )
 
 
-        // ---------------------------------------------
-        // PRICE
-        // ---------------------------------------------
 
         OutlinedTextField(
             value = price,
@@ -243,9 +223,6 @@ fun AddFoodScreen(
         )
 
 
-        // ---------------------------------------------
-        // AVAILABILITY
-        // ---------------------------------------------
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -298,15 +275,10 @@ fun AddFoodScreen(
             modifier = Modifier.height(22.dp)
         )
 
-
-        // ---------------------------------------------
-        // SAVE FOOD
-        // ---------------------------------------------
-
         Button(
             onClick = {
 
-                // Don't save empty food
+
                 if (
                     foodName.trim().isNotEmpty() &&
                     category.trim().isNotEmpty() &&

@@ -107,7 +107,7 @@ fun VendorSignupScreen(
                     modifier = Modifier.height(25.dp)
                 )
 
-                // USERNAME
+
                 OutlinedTextField(
                     value = userName,
 
@@ -135,7 +135,7 @@ fun VendorSignupScreen(
                     modifier = Modifier.height(12.dp)
                 )
 
-                // SHOP NAME
+
                 OutlinedTextField(
                     value = shopName,
 
@@ -162,7 +162,7 @@ fun VendorSignupScreen(
                     modifier = Modifier.height(12.dp)
                 )
 
-                // EMAIL
+
                 OutlinedTextField(
                     value = email,
 
@@ -189,7 +189,7 @@ fun VendorSignupScreen(
                     modifier = Modifier.height(12.dp)
                 )
 
-                // PASSWORD
+
                 OutlinedTextField(
                     value = password,
 
@@ -232,7 +232,7 @@ fun VendorSignupScreen(
                     modifier = Modifier.height(12.dp)
                 )
 
-                // CREATE ACCOUNT
+
                 Button(
                     onClick = {
 
@@ -269,7 +269,7 @@ fun VendorSignupScreen(
                     modifier = Modifier.height(12.dp)
                 )
 
-                // LOGIN
+
                 Button(
                     onClick = onLoginClick,
 
