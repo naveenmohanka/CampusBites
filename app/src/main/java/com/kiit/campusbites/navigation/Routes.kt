@@ -6,6 +6,8 @@ object Routes {
 
     const val SPLASH = "splash"
 
+    const val ROLE_SELECTION = "role_selection"
+
     const val LOGIN = "login"
 
     const val SIGNUP = "signup"

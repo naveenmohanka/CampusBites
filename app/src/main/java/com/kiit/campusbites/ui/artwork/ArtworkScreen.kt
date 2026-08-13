@@ -106,9 +106,9 @@ fun ArtworkScreen(
             Button(
                 onClick = onNextClick,
                 modifier = Modifier
-                    .widthIn(min = 170.dp)
+                    .widthIn(min = 180.dp)
                     .height(58.dp)
-                    .offset(x = 20.dp),
+                    .offset(x = 5.dp),
                 shape = CircleShape,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = CampusYellow,
