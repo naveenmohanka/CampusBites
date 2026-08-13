@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <style name="Theme.CampusBites"
+        parent="android:Theme.Material.Light.NoActionBar">
+
+        <item name="android:windowSplashScreenBackground">
+            #FFB91D
+        </item>
+
+        <item name="android:windowSplashScreenAnimatedIcon">
+            @drawable/campusbites_logo
+        </item>
+
+        <item name="android:windowSplashScreenIconBackgroundColor">
+            @android:color/transparent
+        </item>
+
+    </style>
+
+</resources>
