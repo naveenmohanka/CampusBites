@@ -57,7 +57,7 @@ import com.kiit.campusbites.ui.theme.CampusPurple
 import com.kiit.campusbites.ui.theme.CampusPurpleDark
 import com.kiit.campusbites.ui.theme.CampusPurpleDeep
 import com.kiit.campusbites.ui.theme.CampusYellow
-
+import com.google.firebase.auth.FirebaseAuth
 @Composable
 fun LoginScreen(
     onLoginSuccess: () -> Unit,
@@ -68,6 +68,9 @@ fun LoginScreen(
     var passwordVisible by remember { mutableStateOf(false) }
     var emailError by remember { mutableStateOf("") }
     var passwordError by remember { mutableStateOf("") }
+    val auth = remember {
+        FirebaseAuth.getInstance()
+    }
 
     Box(
         modifier = Modifier
@@ -246,23 +249,54 @@ fun LoginScreen(
 
                     Button(
                         onClick = {
+
                             emailError = ""
                             passwordError = ""
 
-                            var isValid = true
+                            when {
+                                email.isBlank() -> {
+                                    emailError = "Please enter your email"
+                                }
 
-                            if (email.isBlank()) {
-                                emailError = "Please enter your email or college ID"
-                                isValid = false
-                            }
+                                password.isBlank() -> {
+                                    passwordError = "Please enter your password"
+                                }
 
-                            if (password.isBlank()) {
-                                passwordError = "Please enter your password"
-                                isValid = false
-                            }
+                                else -> {
 
-                            if (isValid) {
-                                onLoginSuccess()
+                                    auth.signInWithEmailAndPassword(
+                                        email.trim(),
+                                        password
+                                    )
+                                        .addOnCompleteListener { task ->
+
+                                            if (task.isSuccessful) {
+
+                                                // Firebase login successful
+                                                onLoginSuccess()
+
+                                            } else {
+
+                                                val message = task.exception?.message ?: ""
+
+                                                when {
+                                                    message.contains("password", ignoreCase = true) ||
+                                                            message.contains("credential", ignoreCase = true) -> {
+                                                        passwordError = "Incorrect email or password"
+                                                    }
+
+                                                    message.contains("user", ignoreCase = true) ||
+                                                            message.contains("email", ignoreCase = true) -> {
+                                                        emailError = "Account not found"
+                                                    }
+
+                                                    else -> {
+                                                        emailError = "Login failed. Please try again."
+                                                    }
+                                                }
+                                            }
+                                        }
+                                }
                             }
                         },
                         modifier = Modifier
@@ -336,6 +370,18 @@ private fun ErrorText(message: String) {
 private fun fieldColors() = OutlinedTextFieldDefaults.colors(
     focusedBorderColor = CampusPurple,
     unfocusedBorderColor = Color(0xFFD7BDFB),
+
     focusedContainerColor = Color.White,
-    unfocusedContainerColor = Color.White
+    unfocusedContainerColor = Color.White,
+
+    focusedTextColor = CampusPurpleDeep,
+    unfocusedTextColor = CampusPurpleDeep,
+
+    focusedPlaceholderColor = Color.Gray,
+    unfocusedPlaceholderColor = Color.Gray,
+
+    focusedLeadingIconColor = CampusPurple,
+    unfocusedLeadingIconColor = CampusPurple,
+
+    cursorColor = CampusPurple
 )

@@ -51,7 +51,8 @@ import com.kiit.campusbites.ui.theme.CampusPink
 import com.kiit.campusbites.ui.theme.CampusPurple
 import com.kiit.campusbites.ui.theme.CampusPurpleDeep
 import com.kiit.campusbites.ui.theme.CampusYellow
-
+import android.util.Patterns
+import com.google.firebase.auth.FirebaseAuth
 @Composable
 fun SignupScreen(
     onSignupSuccess: () -> Unit,
@@ -66,6 +67,9 @@ fun SignupScreen(
     var confirmPasswordVisible by remember { mutableStateOf(false) }
 
     var errorMessage by remember { mutableStateOf("") }
+    val auth = remember {
+        FirebaseAuth.getInstance()
+    }
 
     Box(
         modifier = Modifier
@@ -181,7 +185,7 @@ fun SignupScreen(
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
                         placeholder = {
-                            Text("Enter your email or college ID")
+                            Text("Enter your email ")
                         },
                         leadingIcon = {
                             Icon(
@@ -295,17 +299,26 @@ fun SignupScreen(
 
                     Button(
                         onClick = {
+
                             when {
                                 name.isBlank() -> {
                                     errorMessage = "Please enter your full name"
                                 }
 
                                 email.isBlank() -> {
-                                    errorMessage = "Please enter your email or college ID"
+                                    errorMessage = "Please enter your email"
+                                }
+
+                                !Patterns.EMAIL_ADDRESS.matcher(email.trim()).matches() -> {
+                                    errorMessage = "Please enter a valid email address"
                                 }
 
                                 password.isBlank() -> {
                                     errorMessage = "Please enter a password"
+                                }
+
+                                password.length < 6 -> {
+                                    errorMessage = "Password must be at least 6 characters"
                                 }
 
                                 confirmPassword.isBlank() -> {
@@ -317,8 +330,27 @@ fun SignupScreen(
                                 }
 
                                 else -> {
+
                                     errorMessage = ""
-                                    onSignupSuccess()
+
+                                    auth.createUserWithEmailAndPassword(
+                                        email.trim(),
+                                        password
+                                    )
+                                        .addOnCompleteListener { task ->
+
+                                            if (task.isSuccessful) {
+
+                                                // Account created successfully
+                                                onSignupSuccess()
+
+                                            } else {
+
+                                                errorMessage =
+                                                    task.exception?.message
+                                                        ?: "Account creation failed"
+                                            }
+                                        }
                                 }
                             }
                         },
@@ -369,8 +401,20 @@ fun SignupScreen(
 private fun signupFieldColors() = OutlinedTextFieldDefaults.colors(
     focusedBorderColor = CampusPurple,
     unfocusedBorderColor = Color(0xFFD7BDFB),
+
     focusedContainerColor = Color.White,
-    unfocusedContainerColor = Color.White
+    unfocusedContainerColor = Color.White,
+
+    focusedTextColor = CampusPurpleDeep,
+    unfocusedTextColor = CampusPurpleDeep,
+
+    focusedPlaceholderColor = Color.Gray,
+    unfocusedPlaceholderColor = Color.Gray,
+
+    focusedLeadingIconColor = CampusPurple,
+    unfocusedLeadingIconColor = CampusPurple,
+
+    cursorColor = CampusPurple
 )
 
 @Composable

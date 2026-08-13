@@ -17,13 +17,13 @@ import com.kiit.campusbites.ui.vendor.VendorLoginScreen
 
 @Composable
 fun CampusBitesNavGraph(
-    navController: NavHostController
+    navController: NavHostController,
+    startDestination: String
 ) {
 
     NavHost(
         navController = navController,
-        startDestination = Routes.ARTWORK
-    ) {
+        startDestination = startDestination    ) {
 
         // ------------------------------------------------
         // ARTWORK / SPLASH
@@ -161,11 +161,22 @@ fun CampusBitesNavGraph(
 
         composable(Routes.PROFILE) {
 
+//            ProfileScreen(
+//
+//                onBackClick = {
+//
+//                    navController.popBackStack()
+//                }
+//            )
+
             ProfileScreen(
-
-                onBackClick = {
-
-                    navController.popBackStack()
+                onLogoutClick = {
+                    navController.navigate(Routes.ARTWORK) {
+                        popUpTo(0) {
+                            inclusive = true
+                        }
+                        launchSingleTop = true
+                    }
                 }
             )
         }
