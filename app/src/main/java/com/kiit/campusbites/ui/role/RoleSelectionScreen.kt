@@ -100,7 +100,7 @@ fun RoleSelectionScreen(
             // LOGO
             // -----------------------------------------------------
             Spacer(
-                modifier = Modifier.height(70.dp)
+                modifier = Modifier.height(120.dp)
             )
 
             Image(
@@ -109,11 +109,7 @@ fun RoleSelectionScreen(
                 ),
                 contentDescription = "CampusBites Logo",
                 modifier = Modifier
-                    .size(180.dp)
-                    .shadow(
-                        elevation = 8.dp,
-                        shape = RoundedCornerShape(22.dp)
-                    ),
+                    .size(130.dp),
                 contentScale = ContentScale.Fit
             )
 
@@ -175,7 +171,7 @@ fun RoleSelectionScreen(
             // SPACE BEFORE BUTTONS
             // -----------------------------------------------------
             Spacer(
-                modifier = Modifier.height(30.dp)
+                modifier = Modifier.height(25.dp)
             )
 
             // -----------------------------------------------------

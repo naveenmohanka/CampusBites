@@ -13,6 +13,7 @@ object Routes {
     const val SIGNUP = "signup"
 
     const val HOME = "home"
+    const val VENDOR_SIGNUP = "vendor_signup"
 
     const val FOOD_COURTS = "food_courts"
 
