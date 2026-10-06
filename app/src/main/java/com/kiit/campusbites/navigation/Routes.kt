@@ -7,6 +7,13 @@ object Routes {
     const val SPLASH = "splash"
 
     const val ROLE_SELECTION = "role_selection"
+    // Vendor
+
+
+
+    const val VENDOR_ADD_FOOD = "vendor_add_food"
+
+
 
     const val LOGIN = "login"
 
@@ -47,9 +54,22 @@ object Routes {
 
     const val VENDOR_DASHBOARD = "vendor_dashboard"
 
-    const val VENDOR_MENU = "vendor_menu"
+    const val VENDOR_PROFILE = "vendor_profile"
+
 
     const val VENDOR_ORDERS = "vendor_orders"
+
+
+    const val VENDOR_MENU = "vendor_menu"
+
+    const val VENDOR_NEW_ORDERS = "vendor_new_orders"
+
+    const val VENDOR_PREPARING_ORDERS = "vendor_preparing_orders"
+
+    const val VENDOR_READY_ORDERS = "vendor_ready_orders"
+
+    const val VENDOR_COMPLETED_ORDERS = "vendor_completed_orders"
+
 
     const val VENDOR_REVENUE = "vendor_revenue"
 

@@ -1,9 +1,17 @@
 package com.kiit.campusbites.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 import com.kiit.campusbites.ui.artwork.ArtworkScreen
 import com.kiit.campusbites.ui.auth.LoginScreen
@@ -12,37 +20,93 @@ import com.kiit.campusbites.ui.home.FoodCourtsScreen
 import com.kiit.campusbites.ui.home.HomeScreen
 import com.kiit.campusbites.ui.profile.ProfileScreen
 import com.kiit.campusbites.ui.role.RoleSelectionScreen
+
 import com.kiit.campusbites.ui.vendor.VendorDashboardScreen
 import com.kiit.campusbites.ui.vendor.VendorLoginScreen
 import com.kiit.campusbites.ui.vendor.VendorSignupScreen
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.kiit.campusbites.ui.vendor.VendorSignupScreen
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import com.kiit.campusbites.ui.vendor.VendorMenuScreen
+import com.kiit.campusbites.ui.vendor.VendorMenuItem
+
+import com.kiit.campusbites.ui.menu.AddFoodScreen
+import com.kiit.campusbites.ui.orders.VendorOrdersScreen
+import com.kiit.campusbites.ui.vendor.VendorProfileScreen
+import com.kiit.campusbites.ui.orders.OrderStatus
+
 @Composable
 fun CampusBitesNavGraph(
     navController: NavHostController,
     startDestination: String
 ) {
 
+    // ============================================================
+    // VENDOR MENU DATA
+    // ============================================================
+
+    val vendorMenuItems = remember {
+
+        mutableStateListOf(
+
+            VendorMenuItem(
+                id = 1,
+                name = "Classic Burger",
+                category = "Burgers",
+                price = "₹89",
+                emoji = "🍔",
+                available = true
+            ),
+
+            VendorMenuItem(
+                id = 2,
+                name = "Veg Pizza",
+                category = "Pizzas",
+                price = "₹129",
+                emoji = "🍕",
+                available = true
+            ),
+
+            VendorMenuItem(
+                id = 3,
+                name = "Cold Coffee",
+                category = "Drinks",
+                price = "₹60",
+                emoji = "🥤",
+                available = true
+            ),
+
+            VendorMenuItem(
+                id = 4,
+                name = "Samosa",
+                category = "Snacks",
+                price = "₹20",
+                emoji = "🥟",
+                available = false
+            )
+        )
+    }
+
+
+    // ============================================================
+    // NAV HOST
+    // ============================================================
+
     NavHost(
         navController = navController,
         startDestination = startDestination
     ) {
 
-        // ------------------------------------------------
+
+        // ========================================================
         // ARTWORK / SPLASH
-        // ------------------------------------------------
+        // ========================================================
 
         composable(Routes.ARTWORK) {
 
             ArtworkScreen(
                 onNextClick = {
 
-                    navController.navigate(Routes.ROLE_SELECTION) {
+                    navController.navigate(
+                        Routes.ROLE_SELECTION
+                    ) {
 
                         popUpTo(Routes.ARTWORK) {
                             inclusive = true
@@ -52,27 +116,33 @@ fun CampusBitesNavGraph(
             )
         }
 
-        // ------------------------------------------------
+
+        // ========================================================
         // ROLE SELECTION
-        // ------------------------------------------------
+        // ========================================================
 
         composable(Routes.ROLE_SELECTION) {
 
             RoleSelectionScreen(
 
                 onStudentClick = {
-                    navController.navigate(Routes.LOGIN)
+                    navController.navigate(
+                        Routes.LOGIN
+                    )
                 },
 
                 onVendorClick = {
-                    navController.navigate(Routes.VENDOR_LOGIN)
+                    navController.navigate(
+                        Routes.VENDOR_LOGIN
+                    )
                 }
             )
         }
 
-        // ------------------------------------------------
+
+        // ========================================================
         // STUDENT LOGIN
-        // ------------------------------------------------
+        // ========================================================
 
         composable(Routes.LOGIN) {
 
@@ -80,9 +150,13 @@ fun CampusBitesNavGraph(
 
                 onLoginSuccess = {
 
-                    navController.navigate(Routes.HOME) {
+                    navController.navigate(
+                        Routes.HOME
+                    ) {
 
-                        popUpTo(Routes.ROLE_SELECTION) {
+                        popUpTo(
+                            Routes.ROLE_SELECTION
+                        ) {
                             inclusive = true
                         }
                     }
@@ -90,14 +164,17 @@ fun CampusBitesNavGraph(
 
                 onSignupClick = {
 
-                    navController.navigate(Routes.SIGNUP)
+                    navController.navigate(
+                        Routes.SIGNUP
+                    )
                 }
             )
         }
 
-        // ------------------------------------------------
+
+        // ========================================================
         // STUDENT SIGNUP
-        // ------------------------------------------------
+        // ========================================================
 
         composable(Routes.SIGNUP) {
 
@@ -105,9 +182,13 @@ fun CampusBitesNavGraph(
 
                 onSignupSuccess = {
 
-                    navController.navigate(Routes.LOGIN) {
+                    navController.navigate(
+                        Routes.LOGIN
+                    ) {
 
-                        popUpTo(Routes.SIGNUP) {
+                        popUpTo(
+                            Routes.SIGNUP
+                        ) {
                             inclusive = true
                         }
                     }
@@ -120,9 +201,10 @@ fun CampusBitesNavGraph(
             )
         }
 
-        // ------------------------------------------------
+
+        // ========================================================
         // STUDENT HOME
-        // ------------------------------------------------
+        // ========================================================
 
         composable(Routes.HOME) {
 
@@ -130,19 +212,24 @@ fun CampusBitesNavGraph(
 
                 onFoodCourtsSeeAll = {
 
-                    navController.navigate(Routes.FOOD_COURTS)
+                    navController.navigate(
+                        Routes.FOOD_COURTS
+                    )
                 },
 
                 onProfileClick = {
 
-                    navController.navigate(Routes.PROFILE)
+                    navController.navigate(
+                        Routes.PROFILE
+                    )
                 }
             )
         }
 
-        // ------------------------------------------------
+
+        // ========================================================
         // FOOD COURTS
-        // ------------------------------------------------
+        // ========================================================
 
         composable(Routes.FOOD_COURTS) {
 
@@ -155,16 +242,20 @@ fun CampusBitesNavGraph(
             )
         }
 
-        // ------------------------------------------------
+
+        // ========================================================
         // STUDENT PROFILE
-        // ------------------------------------------------
+        // ========================================================
 
         composable(Routes.PROFILE) {
 
             ProfileScreen(
+
                 onLogoutClick = {
 
-                    navController.navigate(Routes.ARTWORK) {
+                    navController.navigate(
+                        Routes.ARTWORK
+                    ) {
 
                         popUpTo(0) {
                             inclusive = true
@@ -175,9 +266,11 @@ fun CampusBitesNavGraph(
                 }
             )
         }
-// =================================================
-// VENDOR LOGIN
-// =================================================
+
+
+        // ========================================================
+        // VENDOR LOGIN
+        // ========================================================
 
         composable(Routes.VENDOR_LOGIN) {
 
@@ -189,16 +282,20 @@ fun CampusBitesNavGraph(
 
                 onLoginClick = { email, password ->
 
-                    // Remove previous error
                     vendorLoginError = null
 
-                    val auth = FirebaseAuth.getInstance()
-                    val firestore = FirebaseFirestore.getInstance()
+                    val auth =
+                        FirebaseAuth.getInstance()
+
+                    val firestore =
+                        FirebaseFirestore.getInstance()
+
 
                     auth.signInWithEmailAndPassword(
                         email,
                         password
                     )
+
                         .addOnSuccessListener { result ->
 
                             val uid = result.user?.uid
@@ -209,14 +306,15 @@ fun CampusBitesNavGraph(
                                     .collection("vendors")
                                     .document(uid)
                                     .get()
+
                                     .addOnSuccessListener { document ->
 
                                         if (document.exists()) {
 
-                                            // ✅ Valid vendor
                                             navController.navigate(
                                                 Routes.VENDOR_DASHBOARD
                                             ) {
+
                                                 popUpTo(
                                                     Routes.VENDOR_LOGIN
                                                 ) {
@@ -228,14 +326,13 @@ fun CampusBitesNavGraph(
 
                                         } else {
 
-                                            // Firebase account exists,
-                                            // but it is not a vendor account.
                                             auth.signOut()
 
                                             vendorLoginError =
                                                 "This account is not registered as a vendor."
                                         }
                                     }
+
                                     .addOnFailureListener {
 
                                         auth.signOut()
@@ -252,9 +349,9 @@ fun CampusBitesNavGraph(
                                     "Login failed. Please try again."
                             }
                         }
+
                         .addOnFailureListener {
 
-                            // ❌ Wrong email/password
                             vendorLoginError =
                                 "Incorrect email or password"
                         }
@@ -268,56 +365,81 @@ fun CampusBitesNavGraph(
                 },
 
                 onForgotPasswordClick = {
-                    // We'll connect this later
+                    // Forgot password later
                 },
 
                 loginError = vendorLoginError
             )
         }
-// ------------------------------------------------
-// VENDOR SIGNUP
-// ------------------------------------------------
+
+
+        // ========================================================
+        // VENDOR SIGNUP
+        // ========================================================
 
         composable(Routes.VENDOR_SIGNUP) {
 
             VendorSignupScreen(
 
-                onSignupClick = { name, shopName, email, password ->
+                onSignupClick = {
+                        name,
+                        shopName,
+                        email,
+                        password ->
 
-                    val auth = FirebaseAuth.getInstance()
-                    val firestore = FirebaseFirestore.getInstance()
+                    val auth =
+                        FirebaseAuth.getInstance()
+
+                    val firestore =
+                        FirebaseFirestore.getInstance()
+
 
                     auth.createUserWithEmailAndPassword(
                         email,
                         password
                     )
+
                         .addOnSuccessListener { result ->
 
                             val uid = result.user?.uid
 
                             if (uid != null) {
 
-                                val vendorData = hashMapOf(
-                                    "name" to name,
-                                    "shopName" to shopName,
-                                    "email" to email,
-                                    "role" to "vendor"
-                                )
+                                val vendorData =
+                                    hashMapOf(
+
+                                        "name" to name,
+
+                                        "shopName" to shopName,
+
+                                        "email" to email,
+
+                                        "role" to "vendor"
+                                    )
+
 
                                 firestore
                                     .collection("vendors")
                                     .document(uid)
                                     .set(vendorData)
+
                                     .addOnSuccessListener {
 
-                                        // Firebase automatically signs the new user in.
-                                        // We sign them out so they can login normally.
+                                        // Firebase automatically logs
+                                        // the newly created user in.
+                                        // Sign them out so they can
+                                        // login normally.
+
                                         auth.signOut()
+
 
                                         navController.navigate(
                                             Routes.VENDOR_LOGIN
                                         ) {
-                                            popUpTo(Routes.VENDOR_SIGNUP) {
+
+                                            popUpTo(
+                                                Routes.VENDOR_SIGNUP
+                                            ) {
                                                 inclusive = true
                                             }
 
@@ -335,9 +457,10 @@ fun CampusBitesNavGraph(
             )
         }
 
-        // =================================================
+
+        // ========================================================
         // VENDOR DASHBOARD
-        // =================================================
+        // ========================================================
 
         composable(Routes.VENDOR_DASHBOARD) {
 
@@ -360,7 +483,10 @@ fun CampusBitesNavGraph(
                 },
 
                 onProfileClick = {
-                    // Vendor profile will be connected later
+
+                    navController.navigate(
+                        Routes.VENDOR_PROFILE
+                    )
                 },
 
                 onPerformanceClick = {
@@ -368,6 +494,272 @@ fun CampusBitesNavGraph(
                     navController.navigate(
                         Routes.VENDOR_REVENUE
                     )
+                }
+            )
+        }
+
+// ========================================================
+// VENDOR PROFILE
+// ========================================================
+
+        composable(Routes.VENDOR_PROFILE) {
+
+            VendorProfileScreen(
+
+                userName = "Vendor",
+
+                onBackClick = {
+                    navController.popBackStack()
+                },
+
+                onSaveClick = {
+                    // Profile save functionality later
+                },
+
+                onLogoutClick = {
+
+                    FirebaseAuth
+                        .getInstance()
+                        .signOut()
+
+                    navController.navigate(
+                        Routes.ROLE_SELECTION
+                    ) {
+
+                        popUpTo(0) {
+                            inclusive = true
+                        }
+
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
+
+
+        // ========================================================
+        // VENDOR MENU
+        // ========================================================
+
+        composable(Routes.VENDOR_MENU) {
+
+            VendorMenuScreen(
+
+                menuItems = vendorMenuItems,
+
+                onBackClick = {
+
+                    navController.popBackStack()
+                },
+
+                onAddFoodClick = {
+
+                    navController.navigate(
+                        Routes.VENDOR_ADD_FOOD
+                    )
+                },
+
+                onEditFoodClick = {
+                    // Edit Food later
+                }
+            )
+        }
+
+
+        // ========================================================
+        // VENDOR ADD FOOD
+        // ========================================================
+
+        composable(Routes.VENDOR_ADD_FOOD) {
+
+            AddFoodScreen(
+
+                onBackClick = {
+
+                    navController.popBackStack()
+                },
+
+
+                // IMPORTANT:
+                // onSaveClick — NOT oonSaveClick
+
+                onSaveClick = {
+                        foodName,
+                        category,
+                        price,
+                        imageUri,
+                        isAvailable ->
+
+
+                    // Generate new ID
+
+                    val newId =
+                        if (vendorMenuItems.isEmpty()) {
+
+                            1
+
+                        } else {
+
+                            vendorMenuItems.maxOf {
+                                it.id
+                            } + 1
+                        }
+
+
+                    // Choose emoji based on category
+
+                    val emoji =
+                        when (
+                            category.lowercase()
+                        ) {
+
+                            "burgers" -> "🍔"
+
+                            "pizzas" -> "🍕"
+
+                            "drinks" -> "🥤"
+
+                            "snacks" -> "🥟"
+
+                            else -> "🍽️"
+                        }
+
+
+                    // Add item to shared list
+
+                    vendorMenuItems.add(
+
+                        VendorMenuItem(
+
+                            id = newId,
+
+                            name = foodName,
+
+                            category = category,
+
+                            price = "₹$price",
+
+                            emoji = emoji,
+
+                            imageUri = imageUri,
+
+                            available = isAvailable
+                        )
+                    )
+
+
+                    // Go back to menu
+
+                    navController.popBackStack()
+                }
+            )
+        }
+
+
+        // ========================================================
+        // VENDOR ORDERS
+        // ========================================================
+
+        // ========================================================
+// VENDOR ALL ORDERS
+// ========================================================
+
+        composable(Routes.VENDOR_ORDERS) {
+
+            VendorOrdersScreen(
+                selectedStatus = null,
+
+                onBackClick = {
+                    navController.popBackStack()
+                },
+
+                onOrderClick = { order ->
+
+                    // Order detail later
+                }
+            )
+        }
+
+
+// ========================================================
+// VENDOR NEW ORDERS
+// ========================================================
+
+        composable(Routes.VENDOR_NEW_ORDERS) {
+
+            VendorOrdersScreen(
+                selectedStatus = OrderStatus.NEW,
+
+                onBackClick = {
+                    navController.popBackStack()
+                },
+
+                onOrderClick = { order ->
+
+                    // Order detail later
+                }
+            )
+        }
+
+
+// ========================================================
+// VENDOR PREPARING ORDERS
+// ========================================================
+
+        composable(Routes.VENDOR_PREPARING_ORDERS) {
+
+            VendorOrdersScreen(
+                selectedStatus = OrderStatus.PREPARING,
+
+                onBackClick = {
+                    navController.popBackStack()
+                },
+
+                onOrderClick = { order ->
+
+                    // Order detail later
+                }
+            )
+        }
+
+
+// ========================================================
+// VENDOR READY ORDERS
+// ========================================================
+
+        composable(Routes.VENDOR_READY_ORDERS) {
+
+            VendorOrdersScreen(
+                selectedStatus = OrderStatus.READY,
+
+                onBackClick = {
+                    navController.popBackStack()
+                },
+
+                onOrderClick = { order ->
+
+                    // Order detail later
+                }
+            )
+        }
+
+
+// ========================================================
+// VENDOR COMPLETED ORDERS
+// ========================================================
+
+        composable(Routes.VENDOR_COMPLETED_ORDERS) {
+
+            VendorOrdersScreen(
+                selectedStatus = OrderStatus.COMPLETED,
+
+                onBackClick = {
+                    navController.popBackStack()
+                },
+
+                onOrderClick = { order ->
+
+                    // Order detail later
                 }
             )
         }

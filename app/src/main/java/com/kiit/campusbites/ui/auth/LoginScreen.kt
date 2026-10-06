@@ -48,6 +48,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kiit.campusbites.R
@@ -58,6 +59,8 @@ import com.kiit.campusbites.ui.theme.CampusPurpleDark
 import com.kiit.campusbites.ui.theme.CampusPurpleDeep
 import com.kiit.campusbites.ui.theme.CampusYellow
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.pipeline.evaluation.convertUnit
+
 @Composable
 fun LoginScreen(
     onLoginSuccess: () -> Unit,
@@ -385,3 +388,15 @@ private fun fieldColors() = OutlinedTextFieldDefaults.colors(
 
     cursorColor = CampusPurple
 )
+@Preview(
+    showBackground = true,
+    showSystemUi = true,
+    name = "Login Screen Preview"
+)
+@Composable
+fun LoginScreenPreview() {
+    LoginScreen(
+        onLoginSuccess = {},
+        onSignupClick = {}
+    )
+}

@@ -46,11 +46,12 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.compose.ui)
-
+    implementation("io.coil-kt.coil3:coil-compose:3.3.0")
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:34.16.0"))
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
+    implementation(libs.androidx.material3)
 
     implementation(libs.androidx.navigation.compose)
     implementation("androidx.core:core-splashscreen:1.2.0")

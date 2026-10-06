@@ -118,7 +118,7 @@ fun VendorOrderDetailScreen(
                 Text("STATUS", fontSize = 11.sp, color = Color.Gray)
 
                 Text(
-                    text = "${statusEmoji(order.status)} ${order.status}",
+                    text = "${statusEmoji(order.status)} ${order.status.name.lowercase().replaceFirstChar { it.uppercase() }}",
                     fontSize = 18.sp,
                     color = statusColor(order.status)
                 )
@@ -127,7 +127,7 @@ fun VendorOrderDetailScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        if (order.status == "New") {
+        if (order.status == OrderStatus.NEW) {
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -167,20 +167,3 @@ fun VendorOrderDetailScreen(
     }
 }
 
-private fun statusColor(status: String): Color =
-    when (status) {
-        "New" -> Color(0xFFFFC857)
-        "Preparing" -> Color(0xFFE056FD)
-        "Ready" -> Color(0xFF4ADE80)
-        "Rejected" -> Color(0xFFFF5252)
-        else -> Color.White
-    }
-
-private fun statusEmoji(status: String): String =
-    when (status) {
-        "New" -> "🆕"
-        "Preparing" -> "🔥"
-        "Ready" -> "✅"
-        "Rejected" -> "❌"
-        else -> "⏳"
-    }

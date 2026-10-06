@@ -26,12 +26,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 
 @Composable
 fun VendorProfileScreen(
     userName: String = "Piyush",
     onBackClick: () -> Unit = {},
-    onSaveClick: () -> Unit = {}
+    onSaveClick: () -> Unit = {},
+    onLogoutClick: () -> Unit = {}
 ) {
 
     var name by remember {
@@ -59,6 +62,7 @@ fun VendorProfileScreen(
             .fillMaxSize()
             .background(Color.Black)
             .statusBarsPadding()
+            .verticalScroll(rememberScrollState())
             .padding(horizontal = 20.dp, vertical = 12.dp)
     ) {
 
@@ -210,6 +214,26 @@ fun VendorProfileScreen(
             Text(
                 text = "💾 Save Profile",
                 fontSize = 16.sp
+            )
+        }
+        Spacer(
+            modifier = Modifier.height(14.dp)
+        )
+
+        Button(
+            onClick = onLogoutClick,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(55.dp),
+            shape = RoundedCornerShape(18.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF2A2024)
+            )
+        ) {
+            Text(
+                text = "🚪 Logout",
+                fontSize = 16.sp,
+                color = Color(0xFFFF6B6B)
             )
         }
     }

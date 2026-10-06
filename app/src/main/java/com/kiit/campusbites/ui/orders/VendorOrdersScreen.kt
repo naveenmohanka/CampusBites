@@ -21,61 +21,124 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+
+
+// ============================================================
+// VENDOR ORDER MODEL
+// ============================================================
 
 data class VendorOrder(
     val orderId: String,
     val customerName: String,
     val items: String,
     val total: String,
-    val status: String
+    val status: OrderStatus
 )
+
+
+// ============================================================
+// VENDOR ORDERS SCREEN
+// ============================================================
 
 @Composable
 fun VendorOrdersScreen(
+    selectedStatus: OrderStatus? = null,
     onBackClick: () -> Unit = {},
     onOrderClick: (VendorOrder) -> Unit = {}
 ) {
 
+    // --------------------------------------------------------
+    // DEMO ORDERS
+    // --------------------------------------------------------
+
     val orders = listOf(
+
         VendorOrder(
-            "#1001",
-            "Rahul",
-            "🍔 Burger x 2, 🥟 Samosa x 1",
-            "₹208",
-            "New"
+            orderId = "#1001",
+            customerName = "Rahul",
+            items = "🍔 Burger x 2, 🥟 Samosa x 1",
+            total = "₹208",
+            status = OrderStatus.NEW
         ),
+
         VendorOrder(
-            "#1002",
-            "Priya",
-            "🥤 Cold Coffee x 1",
-            "₹60",
-            "Preparing"
+            orderId = "#1002",
+            customerName = "Priya",
+            items = "🥤 Cold Coffee x 1",
+            total = "₹60",
+            status = OrderStatus.PREPARING
         ),
+
         VendorOrder(
-            "#1003",
-            "Aman",
-            "🍔 Burger x 1",
-            "₹89",
-            "Ready"
+            orderId = "#1003",
+            customerName = "Aman",
+            items = "🍔 Burger x 1",
+            total = "₹89",
+            status = OrderStatus.READY
+        ),
+
+        VendorOrder(
+            orderId = "#1004",
+            customerName = "Sneha",
+            items = "🍕 Paneer Pizza x 1",
+            total = "₹149",
+            status = OrderStatus.COMPLETED
+        ),
+
+        VendorOrder(
+            orderId = "#1005",
+            customerName = "Arjun",
+            items = "🍟 French Fries x 2",
+            total = "₹100",
+            status = OrderStatus.REJECTED
         )
     )
+
+
+    // --------------------------------------------------------
+    // FILTER ORDERS
+    // --------------------------------------------------------
+
+    val filteredOrders =
+        if (selectedStatus == null) {
+            orders
+        } else {
+            orders.filter { order ->
+                order.status == selectedStatus
+            }
+        }
+
+
+    // --------------------------------------------------------
+    // SCREEN
+    // --------------------------------------------------------
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
             .statusBarsPadding()
-            .padding(horizontal = 20.dp, vertical = 12.dp)
+            .padding(
+                horizontal = 20.dp,
+                vertical = 12.dp
+            )
     ) {
+
+
+        // ====================================================
+        // BACK BUTTON
+        // ====================================================
 
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.End
         ) {
+
             Button(
                 onClick = onBackClick,
                 shape = RoundedCornerShape(14.dp),
@@ -83,36 +146,96 @@ fun VendorOrdersScreen(
                     containerColor = Color(0xFF242432)
                 )
             ) {
-                Text("← Back")
+
+                Text(
+                    text = "← Back"
+                )
             }
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+
+        Spacer(
+            modifier = Modifier.height(8.dp)
+        )
+
+
+        // ====================================================
+        // HEADER
+        // ====================================================
 
         Text(
-            text = "📦 ORDERS",
+            text = when (selectedStatus) {
+
+                OrderStatus.NEW ->
+                    "🆕 NEW ORDERS"
+
+                OrderStatus.PREPARING ->
+                    "🔥 PREPARING ORDERS"
+
+                OrderStatus.READY ->
+                    "✅ READY ORDERS"
+
+                OrderStatus.COMPLETED ->
+                    "✓ COMPLETED ORDERS"
+
+                OrderStatus.REJECTED ->
+                    "❌ REJECTED ORDERS"
+
+                null ->
+                    "📦 ORDERS"
+            },
             fontSize = 32.sp,
             color = Color.White
         )
 
+
         Text(
-            text = "${orders.size} active orders",
+            text = when (filteredOrders.size) {
+
+                0 ->
+                    "No orders found"
+
+                1 ->
+                    "1 order"
+
+                else ->
+                    "${filteredOrders.size} orders"
+            },
             fontSize = 14.sp,
             color = Color(0xFF999999)
         )
 
-        Spacer(modifier = Modifier.height(20.dp))
+
+        Spacer(
+            modifier = Modifier.height(20.dp)
+        )
+
+
+        // ====================================================
+        // ORDERS LIST
+        // ====================================================
 
         LazyColumn(
+            modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
 
-            items(orders) { order ->
+            items(
+                items = filteredOrders,
+                key = { order ->
+                    order.orderId
+                }
+            ) { order ->
+
 
                 AnimatedVisibility(
                     visible = true,
                     enter = fadeIn()
                 ) {
+
+                    // ====================================================
+                    // ORDER CARD
+                    // ====================================================
 
                     Card(
                         modifier = Modifier.fillMaxWidth(),
@@ -126,9 +249,15 @@ fun VendorOrdersScreen(
                             modifier = Modifier.padding(18.dp)
                         ) {
 
+
+                            // ------------------------------------------------
+                            // ORDER ID + STATUS
+                            // ------------------------------------------------
+
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
 
                                 Text(
@@ -137,14 +266,25 @@ fun VendorOrdersScreen(
                                     color = Color.White
                                 )
 
+
                                 Text(
-                                    text = statusEmoji(order.status) +
-                                            " " + order.status,
+                                    text =
+                                        "${statusEmoji(order.status)} " +
+                                                statusTitle(order.status),
+                                    fontSize = 14.sp,
                                     color = statusColor(order.status)
                                 )
                             }
 
-                            Spacer(modifier = Modifier.height(12.dp))
+
+                            Spacer(
+                                modifier = Modifier.height(12.dp)
+                            )
+
+
+                            // ------------------------------------------------
+                            // CUSTOMER
+                            // ------------------------------------------------
 
                             Text(
                                 text = "CUSTOMER",
@@ -152,20 +292,38 @@ fun VendorOrdersScreen(
                                 color = Color.Gray
                             )
 
+
                             Text(
                                 text = order.customerName,
                                 fontSize = 18.sp,
                                 color = Color.White
                             )
 
-                            Spacer(modifier = Modifier.height(10.dp))
+
+                            Spacer(
+                                modifier = Modifier.height(10.dp)
+                            )
+
+
+                            // ------------------------------------------------
+                            // ITEMS
+                            // ------------------------------------------------
 
                             Text(
                                 text = order.items,
-                                color = Color(0xFFCCCCD5)
+                                color = Color(0xFFCCCCD5),
+                                fontSize = 14.sp
                             )
 
-                            Spacer(modifier = Modifier.height(10.dp))
+
+                            Spacer(
+                                modifier = Modifier.height(10.dp)
+                            )
+
+
+                            // ------------------------------------------------
+                            // TOTAL
+                            // ------------------------------------------------
 
                             Text(
                                 text = order.total,
@@ -173,7 +331,15 @@ fun VendorOrdersScreen(
                                 color = Color(0xFFFFC857)
                             )
 
-                            Spacer(modifier = Modifier.height(14.dp))
+
+                            Spacer(
+                                modifier = Modifier.height(14.dp)
+                            )
+
+
+                            // ------------------------------------------------
+                            // VIEW ORDER BUTTON
+                            // ------------------------------------------------
 
                             Button(
                                 onClick = {
@@ -185,7 +351,11 @@ fun VendorOrdersScreen(
                                     containerColor = Color(0xFF292939)
                                 )
                             ) {
-                                Text("View Order  →")
+
+                                Text(
+                                    text = "View Order  →",
+                                    fontSize = 15.sp
+                                )
                             }
                         }
                     }
@@ -195,20 +365,86 @@ fun VendorOrdersScreen(
     }
 }
 
-private fun statusColor(status: String): Color =
-    when (status) {
-        "New" -> Color(0xFFFFC857)
-        "Preparing" -> Color(0xFFE056FD)
-        "Ready" -> Color(0xFF4ADE80)
-        "Rejected" -> Color(0xFFFF5252)
-        else -> Color.White
-    }
 
-private fun statusEmoji(status: String): String =
-    when (status) {
-        "New" -> "🆕"
-        "Preparing" -> "🔥"
-        "Ready" -> "✅"
-        "Rejected" -> "❌"
-        else -> "⏳"
-    }
+// ============================================================
+// STATUS COLOR
+// ============================================================
+
+//private fun statusColor(
+//    status: OrderStatus
+//): Color {
+//
+//    return when (status) {
+//
+//        OrderStatus.NEW ->
+//            Color(0xFFFFC857)
+//
+//        OrderStatus.PREPARING ->
+//            Color(0xFFE056FD)
+//
+//        OrderStatus.READY ->
+//            Color(0xFF4ADE80)
+//
+//        OrderStatus.COMPLETED ->
+//            Color(0xFF60A5FA)
+//
+//        OrderStatus.REJECTED ->
+//            Color(0xFFFF5252)
+//    }
+//}
+
+
+// ============================================================
+// STATUS EMOJI
+// ============================================================
+
+//private fun statusEmoji(
+//    status: OrderStatus
+//): String {
+//
+//    return when (status) {
+//
+//        OrderStatus.NEW ->
+//            "🆕"
+//
+//        OrderStatus.PREPARING ->
+//            "🔥"
+//
+//        OrderStatus.READY ->
+//            "✅"
+//
+//        OrderStatus.COMPLETED ->
+//            "🎉"
+//
+//        OrderStatus.REJECTED ->
+//            "❌"
+//    }
+//}
+
+
+// ============================================================
+// STATUS TITLE
+// ============================================================
+
+//private fun statusTitle(
+//    status: OrderStatus
+//): String {
+//
+//    return when (status) {
+//
+//        OrderStatus.NEW ->
+//            "NEW"
+//
+//        OrderStatus.PREPARING ->
+//            "PREPARING"
+//
+//        OrderStatus.READY ->
+//            "READY"
+//
+//        OrderStatus.COMPLETED ->
+//            "COMPLETED"
+//
+//        OrderStatus.REJECTED ->
+//            "REJECTED"
+//    }
+//}
