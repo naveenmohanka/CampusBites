@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "184498397409",
+    "project_id": "campusbites-b57da",
+    "storage_bucket": "campusbites-b57da.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:184498397409:android:b0a118020b8e2fe36797a0",
+        "android_client_info": {
+          "package_name": "com.kiit.campusbites"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRonpDt8eSy-VWbelIWR8ggsjvvu5c5oc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
